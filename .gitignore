@@ -1,0 +1,34 @@
+# --- Gradle ---
+.gradle/
+build/
+
+# --- Java (Compilazione) ---
+*.class
+*.log
+*.jar
+*.war
+*.ear
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+out/
+
+# --- Eclipse ---
+.settings/
+.bin/
+.project
+.classpath
+
+# --- Visual Studio Code ---
+.vscode/
+
+# --- Spring Boot ---
+# Se usi file di log o file temporanei generati da Spring
+logs/
+*.tmp
+
+# --- OS ---
+.DS_Store
+Thumbs.db
