@@ -19,10 +19,10 @@ public class DashboardWebController {
     }
 
     //visualize the status of all shipments
-    @RequestMapping("/web/shipments")
-    public String shipments() {
-        return "shipments";
-    }
+//    @RequestMapping("/web/shipments")
+//    public String shipments() {
+//        return "shipments";
+//    }
 
     //visualize the status of a single shipment
     @RequestMapping("/web/shipment")

@@ -19,10 +19,10 @@ public class DeviceWebController {
     }
 
     //list devices
-    @RequestMapping("/web/devices")
-    public String devices() {
-        return "devices";
-    }
+//    @RequestMapping("/web/devices")
+//    public String devices() {
+//        return "devices";
+//    }
 
     //view device configuration
     @RequestMapping("/web/configDevice")

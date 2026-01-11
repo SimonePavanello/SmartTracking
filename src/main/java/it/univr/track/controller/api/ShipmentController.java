@@ -50,7 +50,7 @@ public class ShipmentController {
     }
 
     // deallocate a device to a shipment
-    @PostMapping("/api/shipment/allocate")
+    @PostMapping("/api/shipment/deallocate")
     public boolean deallocateDevice() {
         return true;
     }
