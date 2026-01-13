@@ -13,10 +13,10 @@ public class ShipmentWebController {
     }
 
     //list shipments
-    @RequestMapping("/web/shipments")
-    public String shipments() {
-        return "shipments";
-    }
+//    @RequestMapping("/web/shipments")
+//    public String shipments() {
+//        return "shipments";
+//    }
 
     //activate/deactivate tracking
     @RequestMapping("/web/tracking")

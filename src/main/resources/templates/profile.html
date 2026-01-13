@@ -1,8 +1,100 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title></title></head>
-<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | SmartTracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="app-container" th:if="${user != null}">
+    <aside class="sidebar glass-card">
+        <div class="sidebar-logo">
+            <i class="fas fa-box-open"></i> SmartTrack
+        </div>
+        <nav class="sidebar-nav">
+            <a th:href="@{/dashboard}" class="nav-btn"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a th:href="@{/shipments}" class="nav-btn"><i class="fas fa-shipping-fast"></i> Spedizioni</a>
+            <a th:href="@{/devices}" class="nav-btn"><i class="fas fa-microchip"></i> Dispositivi</a>
+            <a th:href="@{/map}" class="nav-btn"><i class="fas fa-map-marked-alt"></i> Mappa Live</a>
 
+            <th:block th:if="${user.role != null && user.role.name() == 'ADMIN'}">
+                <div class="nav-label" style="margin-top: 20px; color: #475569; font-size: 0.7rem;">ADMINISTRATION</div>
+                <a th:href="@{/users}" class="nav-btn"><i class="fas fa-users-cog"></i> Utenti</a>
+                <a th:href="@{/provision}" class="nav-btn"><i class="fas fa-plus-square"></i> Provisioning</a>
+            </th:block>
+        </nav>
+        <a th:href="@{/logout}" class="nav-btn logout-link" style="margin-top: auto; border-color: rgba(239, 68, 68, 0.2);"><i class="fas fa-power-off"></i> Logout</a>
+    </aside>
+
+    <main class="main-content">
+        <header class="profile-header">
+            <h1>Profilo Personale</h1>
+            <p>Bentornato, <strong th:text="${user.firstname + ' ' + user.lastname}">Simone Pavanello</strong>
+                <span class="user-badge" th:text="${user.role}">ADMIN</span>
+            </p>
+        </header>
+
+        <div class="profile-grid">
+            <section class="glass-card section-box">
+                <h3><i class="fas fa-user-circle"></i> Anagrafica</h3>
+                <div class="data-grid">
+                    <div class="data-item"><label>Username</label><p th:text="${user.username}">simone</p></div>
+                    <div class="data-item"><label>Codice Fiscale</label><p th:text="${user.taxIdentificationNumber}">PVNSMN97L10F205U</p></div>
+                    <div class="data-item"><label>Città</label><p th:text="${user.city}">Milano</p></div>
+                    <div class="data-item"><label>Indirizzo</label><p th:text="${user.address}">Via Verona</p></div>
+                    <div class="data-item"><label>Genere</label><p th:text="${user.gender}">MALE</p></div>
+                </div>
+            </section>
+
+            <section class="glass-card section-box">
+                <h3><i class="fas fa-shield-alt"></i> Sicurezza & API</h3>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <label>Email</label>
+                        <p th:text="${user.email}">email@example.it</p>
+                    </div>
+                    <div class="data-item">
+                        <label>Telefono</label>
+                        <p th:text="${user.telephoneNumber}">3467228460</p>
+                    </div>
+
+                    <div class="api-container">
+                        <label><i class="fas fa-key"></i> Chiave API (Feature: Trust)</label>
+                        <div class="api-input-wrapper">
+                            <input type="password" value="TRK-550e8400-e29b-41d4-a716-446655440000" readonly id="apiKey">
+                            <button class="btn-copy" onclick="copyKey()" title="Copia Chiave">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <small style="color: #64748b; font-size: 0.7rem; margin-top: 5px; display: block;">
+                            Mantieni segreta questa chiave per garantire l'integrità del monitoraggio.
+                        </small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card full-width-card">
+                <h3><i class="fas fa-bolt"></i> Azioni Rapide</h3>
+                <div class="action-grid-buttons">
+                    <a th:href="@{/shipment}" class="btn-action-card">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Nuova Spedizione</span>
+                    </a>
+
+                    <a th:href="@{/editConfigDevice}" class="btn-action-card secondary">
+                        <i class="fas fa-cog"></i>
+                        <span>Configura Sensori</span>
+                    </a>
+
+                    <a th:href="@{/dashboard}" class="btn-action-card secondary">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Vedi Statistiche</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
 </body>
-</html>

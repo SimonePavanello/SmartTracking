@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accedi | SmartTracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="auth-body">
+<div class="main-wrapper">
+    <div class="registration-card login-card">
+        <div class="card-header">
+            <div class="logo">🔐</div>
+            <h1>SmartTracking</h1>
+            <p>Bentornato! Accedi al tuo pannello logistico.</p>
+        </div>
+
+        <div th:if="${param.registered}" class="alert alert-success">
+            Registrazione completata! Ora puoi accedere.
+        </div>
+
+        <form th:action="@{/signIn}" method="post" class="styled-form">
+            <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Inserisci il tuo username" required />
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Inserisci la tua password" required />
+            </div>
+
+            <button type="submit" class="btn-submit">Accedi al Sistema</button>
+        </form>
+
+        <div class="card-footer">
+            <p>Non hai ancora un account? <a th:href="@{/signUp}">Registrati ora</a></p>
+            <p><small>Versione 1.0 - Progetto Corso Progettazione e Validazione Sistemi Software</small></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
