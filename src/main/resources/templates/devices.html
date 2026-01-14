@@ -1,8 +1,66 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title></title></head>
-<body>
+    <meta charset="UTF-8">
+    <title>SmartTrack | I miei Dispositivi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="app-container">
+    <aside class="sidebar glass-card">
+        <div class="sidebar-logo"><i class="fas fa-box-open"></i> SmartTrack</div>
+        <nav class="sidebar-nav">
+            <a th:href="@{/profile}" class="nav-btn"><i class="fas fa-user"></i> Profilo</a>
+            <a th:href="@{/web/devices}" class="nav-btn active"><i class="fas fa-microchip"></i> Dispositivi</a>
+            <a th:href="@{/web/provision}" th:if="${user.role.name() == 'ADMIN'}" class="nav-btn"><i class="fas fa-plus-square"></i> Provisioning</a>
+            <a th:href="@{/logout}" class="nav-btn logout-link"><i class="fas fa-power-off"></i> Logout</a>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <header class="profile-header">
+            <h1>Gestione Dispositivi</h1>
+            <p>Lista dei sensori IoT registrati e loro stato attuale</p>
+        </header>
+
+        <section class="glass-card full-width-card">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Device ID</th>
+                    <th>Modello</th>
+                    <th>Data Reg.</th>
+                    <th>API Key</th>
+                    <th>Stato</th>
+                </tr>
+                </thead>
+                <tbody id="deviceTableBody">
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/devices')
+            .then(response => response.json())
+            .then(devices => {
+                const tbody = document.getElementById('deviceTableBody');
+                devices.forEach(dev => {
+                    const row = `<tr>
+                            <td><strong>${dev.deviceId}</strong></td>
+                            <td>${dev.model}</td>
+                            <td>${new Date(dev.registrationDate).toLocaleDateString()}</td>
+                            <td><code>${dev.apiKey.substring(0, 8)}...</code></td>
+                            <td><span class="badge">${dev.status || 'ACTIVE'}</span></td>
+                        </tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
+    });
+</script>
 </body>
 </html>

@@ -1,15 +1,51 @@
 package it.univr.track.controller.api;
 
+import it.univr.track.dto.DeviceDTO;
+import it.univr.track.repository.DeviceRepository;
+import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import it.univr.track.entity.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+
+@Slf4j
 @Controller
 public class DeviceController {
 
+    @Autowired
+    private DeviceRepository deviceRepository;
+
     // add new device
     @PostMapping("/api/device")
-    public boolean addDevice() {
+    @ResponseBody
+    public boolean addDevice(@RequestBody DeviceDTO deviceDto, HttpSession session) {
+
+        log.info("Adding device: " + deviceDto.getDeviceId());
+        UserRegistered user = (UserRegistered) session.getAttribute("loggedInUser");
+        if (user == null || !user.getRole().name().equals("ADMIN")) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        if (deviceRepository.existsByDeviceId(deviceDto.getDeviceId())) {
+            return false;
+        }
+
+        Device device = new Device();
+        device.setDeviceId(deviceDto.getDeviceId());
+        device.setModel(deviceDto.getModelName());
+        device.setApiKey(UUID.randomUUID().toString());
+        device.setRegistrationDate(LocalDateTime.now());
+
+        deviceRepository.save(device);
+
+        log.info("Device added successfully");
+
         return true;
     }
 
@@ -33,8 +69,9 @@ public class DeviceController {
 
     // list all the devices that are visible for this user
     @GetMapping("/api/devices")
-    public Device[] devices() {
-        return new Device[0];
+    @ResponseBody
+    public List<Device> devices() {
+        return deviceRepository.findAll();
     }
 
 

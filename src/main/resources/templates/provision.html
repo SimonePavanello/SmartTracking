@@ -1,8 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title></title></head>
-<body>
+    <meta charset="UTF-8">
+    <title>SmartTrack | Provisioning Device</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="app-container">
+    <aside class="sidebar glass-card">
+        <div class="sidebar-logo"><i class="fas fa-box-open"></i> SmartTrack</div>
+        <nav class="sidebar-nav">
+            <a th:href="@{/profile}" class="nav-btn"><i class="fas fa-user"></i> Profilo</a>
+            <a th:href="@{/web/devices}" class="nav-btn"><i class="fas fa-microchip"></i> Dispositivi</a>
+            <a th:href="@{/logout}" class="nav-btn logout-link"><i class="fas fa-power-off"></i> Logout</a>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <header class="profile-header">
+            <h1>Provisioning Dispositivo</h1>
+            <p>Registra un nuovo sensore IoT tramite ID o QR-Code</p>
+        </header>
+
+        <div class="profile-grid">
+            <section class="glass-card section-box">
+                <h3><i class="fas fa-qrcode"></i> Dati Dispositivo</h3>
+                <div class="data-group">
+                    <div class="data-item">
+                        <label>Device ID</label>
+                        <input type="text" id="devId" placeholder="SN-TRK-001">
+                    </div>
+                    <div class="data-item">
+                        <label>Modello</label>
+                        <input type="text" id="modName" placeholder="Sensor V1">
+                    </div>
+                    <button type="button" onclick="sendProvisioning()" class="btn-auth">Registra nel Sistema</button>
+                </div>
+            </section>
+
+            <section class="glass-card section-box">
+                <h3><i class="fas fa-info-circle"></i> Come funziona</h3>
+                <div class="data-display" style="color: #94a3b8; font-size: 0.9rem;">
+                    <p>1. Inquadra il QR-code sul retro del sensore.</p>
+                    <p>2. Il sistema verificherà l'autenticità del firmware.</p>
+                    <p>3. Verrà generata una <strong>API-Key</strong> univoca per la telemetria.</p>
+                    <div style="margin-top: 20px; padding: 40px; border: 2px dashed rgba(255,255,255,0.1); border-radius: 10px; text-align: center;">
+                        <i class="fas fa-camera fa-2x" style="margin-bottom: 10px;"></i>
+                        <p>Scanner QR non attivo</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            function sendProvisioning() {
+                const data = {
+                    deviceId: document.getElementById('devId').value,
+                    modelName: document.getElementById('modName').value
+                };
+
+                fetch('/api/device', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(success => {
+                        if(success) {
+                            alert("Provisioning completato!");
+                            window.location.href = "/web/provision"; // Redirect manuale
+                        } else {
+                            alert("Errore: Dispositivo già presente o dati non validi.");
+                        }
+                    });
+            }
+        </script>
+    </main>
+</div>
 </body>
 </html>
