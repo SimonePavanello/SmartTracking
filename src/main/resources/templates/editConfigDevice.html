@@ -1,8 +1,90 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title></title></head>
-<body>
+    <meta charset="UTF-8">
+    <title>SmartTrack | Edit Parametri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard-body">
+<div class="app-container">
+    <main class="main-content" style="max-width: 900px; margin: 0 auto;">
+        <header class="profile-header">
+            <h1>Parametri Operativi Spedizione</h1>
+            <p>Regola le sensibilità per il Device: <span id="headerId" style="color: #3b82f6;"></span></p>
+        </header>
 
+        <section class="glass-card section-box">
+            <form id="editForm" class="data-grid">
+                <div class="data-item">
+                    <label>Frequenza Invio (secondi)</label>
+                    <input type="number" id="frequency" name="frequency" class="dark-input">
+                </div>
+                <div class="data-item">
+                    <label>Soglia Temp. Max (°C)</label>
+                    <input type="number" id="tempMax" name="tempMax" class="dark-input">
+                </div>
+                <div class="data-item">
+                    <label>Soglia Urti (G-Force)</label>
+                    <input type="number" id="shock" step="0.1" name="shock" class="dark-input">
+                </div>
+                <div class="data-item">
+                    <label>Stato Operativo</label>
+                    <select id="status" class="dark-input" style="background: #1e293b;">
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="IDLE">IDLE</option>
+                        <option value="MAINTENANCE">MAINTENANCE</option>
+                    </select>
+                </div>
+
+                <div style="grid-column: span 2; margin-top: 30px; display: flex; gap: 15px;">
+                    <button type="submit" class="btn-auth">Salva Modifiche</button>
+                    <a th:href="@{/web/devices}" class="btn-auth secondary" style="text-decoration: none; text-align: center;">Annulla</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+
+<script>
+    document.getElementById('editForm').onsubmit = (e) => {
+        e.preventDefault();
+
+        // Recuperiamo l'ID dall'URL per sapere quale device aggiornare
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId = urlParams.get('id');
+
+        // Creiamo l'oggetto con i dati del form
+        const updatedData = {
+            deviceId: deviceId,
+            frequency: document.getElementById('frequency').value,
+            tempMax: document.getElementById('tempMax').value,
+            shockThreshold: document.getElementById('shock').value,
+            status: document.getElementById('status').value
+        };
+
+        // Chiamata PUT all'API
+        fetch('/api/device', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        })
+            .then(response => response.json())
+            .then(success => {
+                if (success) {
+                    alert("Configurazione salvata con successo!");
+                    window.location.href = "/web/devices"; // Torna alla lista
+                } else {
+                    alert("Errore durante il salvataggio. Riprova.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Errore di connessione al server.");
+            });
+    };
+</script>
 </body>
 </html>

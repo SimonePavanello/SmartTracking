@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>SmartTrack | I miei Dispositivi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>SmartTrack | I Miei Dispositivi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
@@ -21,43 +20,40 @@
 
     <main class="main-content">
         <header class="profile-header">
-            <h1>Gestione Dispositivi</h1>
-            <p>Lista dei sensori IoT registrati e loro stato attuale</p>
+            <h1>Gestione Dispositivi IoT</h1>
+            <p>Monitora lo stato e configura i tuoi sensori ambientali[cite: 5, 6].</p>
         </header>
 
-        <section class="glass-card full-width-card">
-            <table class="data-table">
-                <thead>
-                <tr>
-                    <th>Device ID</th>
-                    <th>Modello</th>
-                    <th>Data Reg.</th>
-                    <th>API Key</th>
-                    <th>Stato</th>
-                </tr>
-                </thead>
-                <tbody id="deviceTableBody">
-                </tbody>
-            </table>
-        </section>
+        <div class="device-grid" id="deviceContainer">
+        </div>
     </main>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/devices')
-            .then(response => response.json())
+            .then(res => res.json())
             .then(devices => {
-                const tbody = document.getElementById('deviceTableBody');
+                const container = document.getElementById('deviceContainer');
+                // All'interno del fetch in devices.html
                 devices.forEach(dev => {
-                    const row = `<tr>
-                            <td><strong>${dev.deviceId}</strong></td>
-                            <td>${dev.model}</td>
-                            <td>${new Date(dev.registrationDate).toLocaleDateString()}</td>
-                            <td><code>${dev.apiKey.substring(0, 8)}...</code></td>
-                            <td><span class="badge">${dev.status || 'ACTIVE'}</span></td>
-                        </tr>`;
-                    tbody.innerHTML += row;
+                    const card = `
+        <div class="glass-card device-card">
+            <div class="device-icon"><i class="fas fa-microchip"></i></div>
+            <h3>${dev.deviceId}</h3>
+            <p class="model-text">${dev.model}</p>
+
+            <div class="device-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                <a href="/web/configDevice?id=${dev.deviceId}" class="btn-action-card secondary" title="Hardware">
+                    <i class="fas fa-cog"></i> HW
+                </a>
+
+                <a href="/web/editConfigDevice?id=${dev.deviceId}" class="btn-action-card" title="Edit Parametri">
+                    <i class="fas fa-edit"></i> Edit Parametri
+                </a>
+            </div>
+        </div>`;
+                    container.innerHTML += card;
                 });
             });
     });

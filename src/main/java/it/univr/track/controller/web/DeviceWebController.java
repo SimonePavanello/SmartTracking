@@ -25,6 +25,7 @@ public class DeviceWebController {
     public String showProvisionPage(Model model, HttpSession session) {
         UserRegistered user = (UserRegistered) session.getAttribute("loggedInUser");
         if (user == null || !user.getRole().name().equals("ADMIN")) {
+            log.error("Unauthorized access to provisioning page");
             return "redirect:/signIn";
         }
         return "provision";
@@ -42,6 +43,7 @@ public class DeviceWebController {
     public String devices(HttpSession session, Model model) {
         UserRegistered user = (UserRegistered) session.getAttribute("loggedInUser");
         if (user == null) {
+            log.error("Unauthorized access to devices page");
             return "redirect:/signIn";
         }
         model.addAttribute("user", user);

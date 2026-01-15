@@ -284,3 +284,95 @@ input, .styled-select {
 .btn-action-card.secondary i {
     color: #94a3b8;
 }
+
+/* Layout a Griglia per i Device */
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.device-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.device-card:hover {
+    transform: translateY(-10px);
+}
+
+.device-icon {
+    font-size: 2.5rem;
+    color: #3b82f6;
+    margin-bottom: 15px;
+    background: rgba(59, 130, 246, 0.1);
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #4ade80;
+    font-size: 0.8rem;
+    margin: 15px 0;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #4ade80;
+    border-radius: 50%;
+    box-shadow: 0 0 0 rgba(74, 222, 128, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+/* Stile per i campi di testo nelle configurazioni */
+.dark-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    color: white;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.dark-input:focus {
+    border-color: #3b82f6;
+}
+
+/* Pulsante secondario (grigio/trasparente) */
+.btn-auth.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 10px;
+}
+
+.btn-auth.secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Allineamento icone nei bottoni */
+.btn-auth i {
+    margin-right: 8px;
+}

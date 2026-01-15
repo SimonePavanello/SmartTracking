@@ -40,6 +40,10 @@ public class Device extends AbstractEntity {
     // Ultimo contatto ricevuto dal sensore (per monitorare se è online)
     private LocalDateTime lastSeen;
 
+    private Integer frequency;        // Frequenza di campionamento (in secondi)
+    private Double tempMax;           // Soglia temperatura massima
+    private Double shockThreshold;    // Soglia per rilevamento urti (G-force)
+    private Boolean isCalibrated;     // Stato calibrazione hardware
 
 
 }

@@ -1,6 +1,7 @@
 package it.univr.track.controller.api;
 
 import it.univr.track.dto.DeviceDTO;
+import it.univr.track.entity.enumeration.DeviceStatus;
 import it.univr.track.repository.DeviceRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class DeviceController {
         log.info("Adding device: " + deviceDto.getDeviceId());
         UserRegistered user = (UserRegistered) session.getAttribute("loggedInUser");
         if (user == null || !user.getRole().name().equals("ADMIN")) {
+            log.error("Unauthorized access to device registration page");
             throw new RuntimeException("Unauthorized");
         }
 
@@ -50,15 +52,27 @@ public class DeviceController {
     }
 
     // read the device configuration
-    @GetMapping("/api/device/{deviceId}")
-    public Device readDeviceConfig(@PathVariable("deviceId") Long id) {
-        return new Device();
+    @GetMapping("/device/{deviceId}")
+    public Device readDeviceConfig(@PathVariable("deviceId") String deviceId) {
+        log.info("Reading device configuration: " + deviceId);
+        return deviceRepository.findByDeviceId(deviceId)
+                .orElse(new Device());
     }
 
     // update device configuration
     @PutMapping("/api/device")
-    public boolean editDevice() {
-        return true;
+    @ResponseBody
+    public boolean editDevice(@RequestBody DeviceDTO updatedDevice) {
+        log.info("Updating device: " + updatedDevice.getDeviceId());
+        return deviceRepository.findByDeviceId(updatedDevice.getDeviceId()).map(device -> {
+            device.setFrequency(updatedDevice.getFrequency());
+            device.setTempMax(updatedDevice.getTempMax());
+            device.setShockThreshold(updatedDevice.getShockThreshold());
+            device.setStatus(DeviceStatus.valueOf(updatedDevice.getStatus()));
+            deviceRepository.save(device);
+            log.info("Device updated successfully");
+            return true;
+        }).orElse(false);
     }
 
     // decommission a device
