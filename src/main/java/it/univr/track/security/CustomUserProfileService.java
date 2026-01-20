@@ -46,4 +46,8 @@ public class CustomUserProfileService implements UserDetailsService {
         userRepository.save(newUser);
         log.info("Nuovo utente registrato con successo: {}", newUser.getUsername());
     }
+
+    public UserRegistered findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow();
+    }
 }

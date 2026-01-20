@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller@RequestMapping("/user")
@@ -61,7 +62,18 @@ public class UserWebController {
     }
 
     @GetMapping("/profile")
-    public String profile() {
+    public String profile(Model model, Principal principal) {
+        String username = principal.getName();
+        log.info("Accesso al profilo per l'utente: {}", username);
+
+        // Recuperiamo i dati completi dal database tramite il tuo servizio
+        UserRegistered user = userService.findByUsername(username);
+
+        model.addAttribute("user", user);
+
+        // Possiamo aggiungere statistiche veloci (es. quante spedizioni ha attive)
+        // model.addAttribute("activeShipments", shipmentService.countByOperator(username));
+
         return "profile";
     }
 

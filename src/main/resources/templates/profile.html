@@ -1,100 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile | SmartTracking</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>SmartTracking - Profilo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="dashboard-body">
-<div class="app-container" th:if="${user != null}">
-    <aside class="sidebar glass-card">
-        <div class="sidebar-logo">
-            <i class="fas fa-box-open"></i> SmartTrack
+<body class="bg-slate-900 text-white font-sans">
+<nav class="bg-slate-800 border-b border-slate-700 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <span class="text-xl font-bold text-blue-500"><i class="fas fa-truck-fast mr-2"></i>SMART TRACKING</span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm transition">
+                Logout <i class="fas fa-sign-out-alt ml-1"></i>
+            </button>
+        </form>
+    </div>
+</nav>
+
+<main class="container mx-auto mt-10 p-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+            <div class="text-center">
+                <div class="w-24 h-24 bg-blue-600 rounded-full mx-auto flex items-center justify-center text-4xl font-bold mb-4">
+                    <span th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">U</span>
+                </div>
+                <h2 class="text-2xl font-bold" th:text="${user.username}">Username</h2>
+                <p class="text-slate-400 text-sm mb-4">Account Certificato</p>
+                <span class="bg-blue-900 text-blue-300 text-xs px-3 py-1 rounded-full uppercase font-bold"
+                      th:text="${user.role}">ROLE_USER</span>
+            </div>
         </div>
-        <nav class="sidebar-nav">
-            <a th:href="@{/dashboard}" class="nav-btn"><i class="fas fa-th-large"></i> Dashboard</a>
-            <a th:href="@{/shipments}" class="nav-btn"><i class="fas fa-shipping-fast"></i> Spedizioni</a>
-            <a th:href="@{/devices}" class="nav-btn"><i class="fas fa-microchip"></i> Dispositivi</a>
-            <a th:href="@{/map}" class="nav-btn"><i class="fas fa-map-marked-alt"></i> Mappa Live</a>
 
-            <th:block th:if="${user.role != null && user.role.name() == 'ADMIN'}">
-                <div class="nav-label" style="margin-top: 20px; color: #475569; font-size: 0.7rem;">ADMINISTRATION</div>
-                <a th:href="@{/users}" class="nav-btn"><i class="fas fa-users-cog"></i> Utenti</a>
-                <a th:href="@{/web/provision}" class="nav-btn"><i class="fas fa-plus-square"></i> Provisioning</a>
-            </th:block>
-        </nav>
-        <a th:href="@{/logout}" class="nav-btn logout-link" style="margin-top: auto; border-color: rgba(239, 68, 68, 0.2);"><i class="fas fa-power-off"></i> Logout</a>
-    </aside>
+        <div class="md:col-span-2 bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+            <h3 class="text-xl font-bold mb-6 border-b border-slate-700 pb-2">Azioni Disponibili</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-    <main class="main-content">
-        <header class="profile-header">
-            <h1>Profilo Personale</h1>
-            <p>Bentornato, <strong th:text="${user.firstname + ' ' + user.lastname}">Simone Pavanello</strong>
-                <span class="user-badge" th:text="${user.role}">ADMIN</span>
-            </p>
-        </header>
-
-        <div class="profile-grid">
-            <section class="glass-card section-box">
-                <h3><i class="fas fa-user-circle"></i> Anagrafica</h3>
-                <div class="data-grid">
-                    <div class="data-item"><label>Username</label><p th:text="${user.username}">simone</p></div>
-                    <div class="data-item"><label>Codice Fiscale</label><p th:text="${user.taxIdentificationNumber}">PVNSMN97L10F205U</p></div>
-                    <div class="data-item"><label>Città</label><p th:text="${user.city}">Milano</p></div>
-                    <div class="data-item"><label>Indirizzo</label><p th:text="${user.address}">Via Verona</p></div>
-                    <div class="data-item"><label>Genere</label><p th:text="${user.gender}">MALE</p></div>
-                </div>
-            </section>
-
-            <section class="glass-card section-box">
-                <h3><i class="fas fa-shield-alt"></i> Sicurezza & API</h3>
-                <div class="data-grid">
-                    <div class="data-item">
-                        <label>Email</label>
-                        <p th:text="${user.email}">email@example.it</p>
+                <a href="/shipping/list" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-blue-600 transition-all group">
+                    <i class="fas fa-box text-3xl mr-4 text-blue-400 group-hover:text-white"></i>
+                    <div>
+                        <span class="block font-bold">Gestione Spedizioni</span>
+                        <span class="text-xs text-slate-400 group-hover:text-blue-100">Crea e associa device</span>
                     </div>
-                    <div class="data-item">
-                        <label>Telefono</label>
-                        <p th:text="${user.telephoneNumber}">3467228460</p>
+                </a>
+
+                <a href="/devices/list" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-emerald-600 transition-all group">
+                    <i class="fas fa-microchip text-3xl mr-4 text-emerald-400 group-hover:text-white"></i>
+                    <div>
+                        <span class="block font-bold">I Miei Dispositivi</span>
+                        <span class="text-xs text-slate-400 group-hover:text-emerald-100">Monitora e configura IoT</span>
                     </div>
+                </a>
 
-                    <div class="api-container">
-                        <label><i class="fas fa-key"></i> Chiave API (Feature: Trust)</label>
-                        <div class="api-input-wrapper">
-                            <input type="password" value="TRK-550e8400-e29b-41d4-a716-446655440000" readonly id="apiKey">
-                            <button class="btn-copy" onclick="copyKey()" title="Copia Chiave">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <small style="color: #64748b; font-size: 0.7rem; margin-top: 5px; display: block;">
-                            Mantieni segreta questa chiave per garantire l'integrità del monitoraggio.
-                        </small>
+                <a href="/tracking/map" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-amber-600 transition-all group">
+                    <i class="fas fa-map-marked-alt text-3xl mr-4 text-amber-400 group-hover:text-white"></i>
+                    <div>
+                        <span class="block font-bold">Mappa Live</span>
+                        <span class="text-xs text-slate-400 group-hover:text-amber-100">Visualizza dati sensori</span>
                     </div>
-                </div>
-            </section>
+                </a>
 
-            <section class="glass-card full-width-card">
-                <h3><i class="fas fa-bolt"></i> Azioni Rapide</h3>
-                <div class="action-grid-buttons">
-                    <a th:href="@{/shipment}" class="btn-action-card">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>Nuova Spedizione</span>
-                    </a>
-
-                    <a th:href="@{/editConfigDevice}" class="btn-action-card secondary">
-                        <i class="fas fa-cog"></i>
-                        <span>Configura Sensori</span>
-                    </a>
-
-                    <a th:href="@{/dashboard}" class="btn-action-card secondary">
-                        <i class="fas fa-chart-pie"></i>
-                        <span>Vedi Statistiche</span>
-                    </a>
-                </div>
-            </section>
+            </div>
         </div>
-    </main>
-</div>
+
+    </div>
+</main>
 </body>
+</html>
