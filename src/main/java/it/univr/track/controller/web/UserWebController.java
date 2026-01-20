@@ -1,86 +1,68 @@
 package it.univr.track.controller.web;
 
+import it.univr.track.dto.UserDTO;
 import it.univr.track.entity.UserRegistered;
 import it.univr.track.repository.UserRepository;
+import it.univr.track.security.CustomUserProfileService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@Controller
+@Controller@RequestMapping("/user")
 @Slf4j
 public class UserWebController {
 
     @Autowired
-    private UserRepository userRepository;
+    private CustomUserProfileService userService;
 
-
-    @RequestMapping("/")
-    public String login(){
-        return "redirect:/profile";
+    @GetMapping("/signin")
+    public String signIn() {
+        return "signIn";
     }
 
-    @GetMapping("/signUp")
-    public String singUp(Model model) {
-        model.addAttribute("user", new UserRegistered());
+    @GetMapping("/signup")
+    public String signUp(Model model) {
+        model.addAttribute("userDto", new UserDTO());
         return "signUp";
     }
 
-    @PostMapping("/signUp")
-    public String registerUser(@ModelAttribute("user") UserRegistered user, Model model) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            model.addAttribute("errorMessage", "Username già esistente!");
+    @PostMapping("/signup")
+    public String doSignUp(@Valid @ModelAttribute("userDto") UserDTO userDto,
+                           BindingResult result,
+                           Model model) {
+        log.info("Tentativo di registrazione per l'utente: {}", userDto.getUsername());
+
+        if (result.hasErrors()) {
+            log.error("Errore di validazione del form di registrazione: {}", result.getAllErrors());
             return "signUp";
         }
 
-        userRepository.save(user);
-
-        return "redirect:/signIn?registered=true";
-    }
-
-    @GetMapping("/signIn")
-    public String singIn() {
-        return "signIn";
-    }
-
-    @PostMapping("/signIn")
-    public String processSignIn(@RequestParam String username,
-                                @RequestParam String password,
-                                Model model,
-                                HttpSession session) {
-
-        Optional<UserRegistered> userOpt = userRepository.findByUsername(username);
-
-        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
-            session.setAttribute("loggedInUser", userOpt.get());
-
-            return "redirect:/profile";
+        if (!userDto.passwordsMatch()) {
+            log.error("Le password non corrispondono");
+            result.rejectValue("confirmPassword", "error.userDto", "Le password non corrispondono");
+            return "signUp";
         }
 
-        model.addAttribute("errorMessage", "Credenziali non valide. Riprova.");
-        return "signIn";
+        try {
+            userService.registerNewUser(userDto);
+            return "redirect:/user/signin?success";
+        } catch (Exception e) {
+            log.error("Errore durante la registrazione: ", e);
+            model.addAttribute("errorMessage", "Errore: " + e.getMessage());
+            return "signUp";
+        }
     }
 
-    //edit user profile
-    @RequestMapping("/profile")
-    public String profile(HttpSession session, Model model) {
-        UserRegistered user = (UserRegistered) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/signIn";
-        }
-        model.addAttribute("user", user);
+    @GetMapping("/profile")
+    public String profile() {
         return "profile";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        log.info("Logout effettuato");
-        session.invalidate();
-        return "redirect:/signIn?logout=true";
     }
 
 }
