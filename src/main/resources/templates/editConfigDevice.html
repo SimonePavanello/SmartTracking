@@ -1,90 +1,66 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>SmartTrack | Edit Parametri</title>
+    <title>SmartTrack | Modifica Configurazione</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="dashboard-body">
-<div class="app-container">
-    <main class="main-content" style="max-width: 900px; margin: 0 auto;">
-        <header class="profile-header">
-            <h1>Parametri Operativi Spedizione</h1>
-            <p>Regola le sensibilità per il Device: <span id="headerId" style="color: #3b82f6;"></span></p>
-        </header>
+<body class="bg-slate-900 text-white min-h-screen">
 
-        <section class="glass-card section-box">
-            <form id="editForm" class="data-grid">
-                <div class="data-item">
-                    <label>Frequenza Invio (secondi)</label>
-                    <input type="number" id="frequency" name="frequency" class="dark-input">
+<nav class="bg-slate-800 border-b border-slate-700 p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+        <span class="text-xl font-bold text-blue-500"><i class="fas fa-truck-fast mr-2"></i>SMART TRACKING</span>
+        <a th:href="@{/web/configDevice/{id}(id=${device.id})}" class="text-slate-400 hover:text-white transition">
+            <i class="fas fa-times mr-2"></i>Annulla
+        </a>
+    </div>
+</nav>
+
+<main class="container mx-auto mt-10 p-4 max-w-2xl">
+    <div class="bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
+        <div class="bg-blue-600 p-6">
+            <h2 class="text-2xl font-bold flex items-center gap-3">
+                <i class="fas fa-sliders-h"></i> Modifica Parametri
+            </h2>
+            <p class="text-blue-100 text-sm mt-1">Configurazione per il dispositivo <span class="font-mono font-bold" th:text="${device.uid}">SN-001</span></p>
+        </div>
+
+        <form th:action="@{/web/editConfigDevice}" method="post" class="p-8 space-y-6">
+            <input type="hidden" name="deviceId" th:value="${device.id}">
+
+            <div class="space-y-4">
+                <div class="p-4 bg-slate-900/50 rounded-2xl border border-slate-700">
+                    <label class="block text-sm font-bold text-slate-400 mb-2">Intervallo di Campionamento</label>
+                    <div class="flex items-center gap-4">
+                        <input type="number" name="interval" th:value="${device.samplingIntervalSeconds}"
+                               class="flex-1 bg-slate-800 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-xl font-mono"
+                               min="10" max="3600" required>
+                        <span class="text-slate-500 font-bold text-lg">SEC</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3">
+                        <i class="fas fa-info-circle mr-1"></i> Definisce ogni quanti secondi il sensore invia i dati di tracking (temperatura, umidità, vibrazioni).
+                    </p>
                 </div>
-                <div class="data-item">
-                    <label>Soglia Temp. Max (°C)</label>
-                    <input type="number" id="tempMax" name="tempMax" class="dark-input">
+
+                <div class="p-4 bg-slate-900/50 rounded-2xl border border-slate-700">
+                    <label class="block text-sm font-bold text-slate-400 mb-2">Soglia Allarme Temperatura (Opzionale)</label>
+                    <input type="number" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl opacity-50 cursor-not-allowed" placeholder="25" disabled>
+                    <p class="text-[10px] text-amber-500 mt-2 uppercase font-bold">Disponibile nella versione Pro</p>
                 </div>
-                <div class="data-item">
-                    <label>Soglia Urti (G-Force)</label>
-                    <input type="number" id="shock" step="0.1" name="shock" class="dark-input">
-                </div>
-                <div class="data-item">
-                    <label>Stato Operativo</label>
-                    <select id="status" class="dark-input" style="background: #1e293b;">
-                        <option value="ACTIVE">ACTIVE</option>
-                        <option value="IDLE">IDLE</option>
-                        <option value="MAINTENANCE">MAINTENANCE</option>
-                    </select>
-                </div>
+            </div>
 
-                <div style="grid-column: span 2; margin-top: 30px; display: flex; gap: 15px;">
-                    <button type="submit" class="btn-auth">Salva Modifiche</button>
-                    <a th:href="@{/web/devices}" class="btn-auth secondary" style="text-decoration: none; text-align: center;">Annulla</a>
-                </div>
-            </form>
-        </section>
-    </main>
-</div>
-
-<script>
-    document.getElementById('editForm').onsubmit = (e) => {
-        e.preventDefault();
-
-        // Recuperiamo l'ID dall'URL per sapere quale device aggiornare
-        const urlParams = new URLSearchParams(window.location.search);
-        const deviceId = urlParams.get('id');
-
-        // Creiamo l'oggetto con i dati del form
-        const updatedData = {
-            deviceId: deviceId,
-            frequency: document.getElementById('frequency').value,
-            tempMax: document.getElementById('tempMax').value,
-            shockThreshold: document.getElementById('shock').value,
-            status: document.getElementById('status').value
-        };
-
-        // Chiamata PUT all'API
-        fetch('/api/device', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedData)
-        })
-            .then(response => response.json())
-            .then(success => {
-                if (success) {
-                    alert("Configurazione salvata con successo!");
-                    window.location.href = "/web/devices"; // Torna alla lista
-                } else {
-                    alert("Errore durante il salvataggio. Riprova.");
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Errore di connessione al server.");
-            });
-    };
-</script>
+            <div class="flex flex-col gap-3 pt-4">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
+                    AGGIORNA CONFIGURAZIONE
+                </button>
+                <p class="text-center text-xs text-slate-500">
+                    Il salvataggio aggiornerà il database. Ricorda di inviare la config all'hardware dopo il salvataggio.
+                </p>
+            </div>
+        </form>
+    </div>
+</main>
 </body>
 </html>

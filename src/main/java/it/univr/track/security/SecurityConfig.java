@@ -23,6 +23,8 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**"
                         ).permitAll()
+                        .requestMatchers("/web/provision/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
+                        .requestMatchers("h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

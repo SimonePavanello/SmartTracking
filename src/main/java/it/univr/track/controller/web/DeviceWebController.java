@@ -1,8 +1,9 @@
 package it.univr.track.controller.web;
 
+import it.univr.track.dto.DeviceConfigDTO;
 import it.univr.track.entity.Device;
 import it.univr.track.entity.UserRegistered;
-import it.univr.track.repository.DeviceRepository;
+import it.univr.track.service.DeviceService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,62 +11,64 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 
 @Slf4j
 @Controller
 public class DeviceWebController {
 
-    @Autowired private DeviceRepository deviceRepository;
+    @Autowired private DeviceService deviceService;
 
-    //provisioning of a new device (QR-code?)
-    @GetMapping("/web/provision")
-    public String showProvisionPage(Model model, HttpSession session) {
-        UserRegistered user = (UserRegistered) session.getAttribute("loggedInUser");
-        if (user == null || !user.getRole().name().equals("ADMIN")) {
-            log.error("Unauthorized access to provisioning page");
-            return "redirect:/signIn";
-        }
-        return "provision";
-    }
-
-
-    //decommissioning of an old device
-    @RequestMapping("/web/decommission")
-    public String decommission() {
-        return "decommission";
-    }
-
-   // list devices
-    @RequestMapping("/web/devices")
-    public String devices(HttpSession session, Model model) {
-        UserRegistered user = (UserRegistered) session.getAttribute("loggedInUser");
-        if (user == null) {
-            log.error("Unauthorized access to devices page");
-            return "redirect:/signIn";
-        }
-        model.addAttribute("user", user);
+    // Vista Lista Devices
+    @GetMapping("/web/devices")
+    public String devices(Model model) {
+        model.addAttribute("devices", deviceService.getAllDevices());
         return "devices";
     }
 
-    //view device configuration
-    @RequestMapping("/web/configDevice")
-    public String configDevice() {
+    // Provisioning (Mostra Form)
+    @GetMapping("/web/provision")
+    public String provision() {
+        return "provision";
+    }
+
+    // Provisioning (Esegue Azione)
+    @PostMapping("/web/provision")
+    public String doProvision(@RequestParam String uid) {
+        log.info("Provisioning di un nuovo dispositivo con UID: {}", uid);
+        deviceService.registerNewDevice(uid);
+        return "redirect:/web/devices";
+    }
+
+    // Decommissioning
+    @PostMapping("/web/decommission/{id}")
+    public String decommission(@PathVariable Long id) {
+        log.info("Decommissioning di un dispositivo con ID: {}", id);
+        deviceService.decommissionDevice(id);
+        return "redirect:/web/devices";
+    }
+
+    // Configurazione: Visualizzazione e Modifica
+    @GetMapping("/web/configDevice/{id}")
+    public String configDevice(@PathVariable Long id, Model model) {
+        log.info("Visualizzazione della configurazione del dispositivo con ID: {}", id);
+        model.addAttribute("device", deviceService.getById(id));
         return "configDevice";
     }
 
-    //edit device configuration
-    @RequestMapping("/web/editConfigDevice")
-    public String editConfigDevice() {
-        return "editConfigDevice";
+    @PostMapping("/web/editConfigDevice")
+    public String editConfigDevice(@ModelAttribute DeviceConfigDTO config) {
+        log.info("Modifica della configurazione del dispositivo con ID: {}", config.getDeviceId());
+        deviceService.updateConfiguration(config);
+        return "redirect:/web/configDevice/" + config.getDeviceId() + "?updated=true";
     }
 
-    //send configuration to device
-    @RequestMapping("/web/sendConfigDevice")
-    public String sendConfigDevice() {
-        return "sendConfigDevice";
+    // Invia configurazione al sensore
+    @PostMapping("/web/sendConfigDevice/{id}")
+    public String sendConfigDevice(@PathVariable Long id) {
+        deviceService.pushConfigToHardware(id);
+        return "redirect:/web/configDevice/" + id + "?sent=true";
     }
 
 }

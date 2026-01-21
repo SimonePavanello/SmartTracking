@@ -18,32 +18,17 @@ public class Device extends AbstractEntity {
     @ManyToOne
     private Shipment shipment;
 
-    // Identificativo univoco dell'hardware (es. Serial Number o UUID)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(unique = true, nullable = false)
-    private String deviceId;
+    private String uid; // ID da QR-code
 
-    // Nome o versione del modello (es. "SmartSensor-v1")
-    private String model;
-
-    // API Key segreta usata per l'autenticazione del device (Scenario 1)
-    // Non deve essere visibile nelle risposte JSON pubbliche per sicurezza
-    @Column(unique = true)
-    private String apiKey;
-
-    // Stato del dispositivo (es. REGISTERED, ACTIVE, DECOMMISSIONED)
     @Enumerated(EnumType.STRING)
-    private DeviceStatus status;
+    private DeviceStatus status; // READY, IN_USE, DECOMMISSIONED
 
-    // Data di registrazione nel sistema tramite provisioning
-    private LocalDateTime registrationDate;
-
-    // Ultimo contatto ricevuto dal sensore (per monitorare se è online)
-    private LocalDateTime lastSeen;
-
-    private Integer frequency;        // Frequenza di campionamento (in secondi)
-    private Double tempMax;           // Soglia temperatura massima
-    private Double shockThreshold;    // Soglia per rilevamento urti (G-force)
-    private Boolean isCalibrated;     // Stato calibrazione hardware
+    private Integer samplingIntervalSeconds; // Configurazione
 
 
 }

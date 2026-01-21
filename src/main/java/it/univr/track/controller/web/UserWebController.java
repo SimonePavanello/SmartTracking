@@ -2,21 +2,22 @@ package it.univr.track.controller.web;
 
 import it.univr.track.dto.UserDTO;
 import it.univr.track.entity.UserRegistered;
-import it.univr.track.repository.UserRepository;
 import it.univr.track.security.CustomUserProfileService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
-import java.util.Optional;
 
-@Controller@RequestMapping("/user")
+@Controller
+@RequestMapping("/user")
 @Slf4j
 public class UserWebController {
 
@@ -66,13 +67,10 @@ public class UserWebController {
         String username = principal.getName();
         log.info("Accesso al profilo per l'utente: {}", username);
 
-        // Recuperiamo i dati completi dal database tramite il tuo servizio
         UserRegistered user = userService.findByUsername(username);
 
         model.addAttribute("user", user);
 
-        // Possiamo aggiungere statistiche veloci (es. quante spedizioni ha attive)
-        // model.addAttribute("activeShipments", shipmentService.countByOperator(username));
 
         return "profile";
     }

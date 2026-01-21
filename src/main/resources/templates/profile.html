@@ -10,8 +10,8 @@
     <div class="container mx-auto flex justify-between items-center">
         <span class="text-xl font-bold text-blue-500"><i class="fas fa-truck-fast mr-2"></i>SMART TRACKING</span>
         <form th:action="@{/logout}" method="post">
-            <button type="submit" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm transition">
-                Logout <i class="fas fa-sign-out-alt ml-1"></i>
+            <button type="submit" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm transition font-bold">
+                LOGOUT <i class="fas fa-sign-out-alt ml-1"></i>
             </button>
         </form>
     </div>
@@ -20,43 +20,52 @@
 <main class="container mx-auto mt-10 p-4">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl h-fit">
             <div class="text-center">
-                <div class="w-24 h-24 bg-blue-600 rounded-full mx-auto flex items-center justify-center text-4xl font-bold mb-4">
+                <div class="w-24 h-24 bg-blue-600 rounded-full mx-auto flex items-center justify-center text-4xl font-bold mb-4 shadow-inner">
                     <span th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">U</span>
                 </div>
                 <h2 class="text-2xl font-bold" th:text="${user.username}">Username</h2>
-                <p class="text-slate-400 text-sm mb-4">Account Certificato</p>
-                <span class="bg-blue-900 text-blue-300 text-xs px-3 py-1 rounded-full uppercase font-bold"
+                <p class="text-slate-400 text-sm mb-4">Operatore Logistico</p>
+
+                <span class="bg-blue-900 text-blue-300 text-xs px-3 py-1 rounded-full uppercase font-black tracking-tighter"
                       th:text="${user.role}">ROLE_USER</span>
             </div>
         </div>
 
         <div class="md:col-span-2 bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
-            <h3 class="text-xl font-bold mb-6 border-b border-slate-700 pb-2">Azioni Disponibili</h3>
+            <h3 class="text-xl font-bold mb-6 border-b border-slate-700 pb-2">Pannello di Controllo</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                <a href="/shipping/list" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-blue-600 transition-all group">
+                <a href="/web/shipments" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-blue-600 transition-all group">
                     <i class="fas fa-box text-3xl mr-4 text-blue-400 group-hover:text-white"></i>
                     <div>
                         <span class="block font-bold">Gestione Spedizioni</span>
-                        <span class="text-xs text-slate-400 group-hover:text-blue-100">Crea e associa device</span>
+                        <span class="text-xs text-slate-400 group-hover:text-blue-100">Crea e monitora viaggi</span>
                     </div>
                 </a>
 
-                <a href="/devices/list" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-emerald-600 transition-all group">
+                <a href="/web/devices" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-emerald-600 transition-all group">
                     <i class="fas fa-microchip text-3xl mr-4 text-emerald-400 group-hover:text-white"></i>
                     <div>
-                        <span class="block font-bold">I Miei Dispositivi</span>
-                        <span class="text-xs text-slate-400 group-hover:text-emerald-100">Monitora e configura IoT</span>
+                        <span class="block font-bold">Inventario Device</span>
+                        <span class="text-xs text-slate-400 group-hover:text-emerald-100">Lista sensori e stati</span>
                     </div>
                 </a>
 
-                <a href="/tracking/map" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-amber-600 transition-all group">
+                <a href="/web/provision" class="flex items-center p-4 bg-slate-700 border border-dashed border-slate-500 rounded-xl hover:border-blue-500 hover:bg-slate-600 transition-all group">
+                    <i class="fas fa-plus-circle text-3xl mr-4 text-slate-400 group-hover:text-blue-400"></i>
+                    <div>
+                        <span class="block font-bold">Nuovo Provisioning</span>
+                        <span class="text-xs text-slate-400 group-hover:text-blue-100">Registra sensore via QR</span>
+                    </div>
+                </a>
+
+                <a href="/web/map" class="flex items-center p-4 bg-slate-700 rounded-xl hover:bg-amber-600 transition-all group">
                     <i class="fas fa-map-marked-alt text-3xl mr-4 text-amber-400 group-hover:text-white"></i>
                     <div>
                         <span class="block font-bold">Mappa Live</span>
-                        <span class="text-xs text-slate-400 group-hover:text-amber-100">Visualizza dati sensori</span>
+                        <span class="text-xs text-slate-400 group-hover:text-amber-100">Posizione in tempo reale</span>
                     </div>
                 </a>
 
