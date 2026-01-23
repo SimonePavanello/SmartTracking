@@ -54,10 +54,10 @@ Il progetto segue rigorosi standard di validazione:
 2. **Build**: `./gradlew build`.
 3. **Esecuzione**: `./gradlew bootRun`.
 4. **Accesso**: Navigare su `http://localhost:8080`.
-    * *Nota*: Al primo avvio usare `admin` / `admin123` per l'accesso amministrativo.
+    * *Nota*: Al primo avvio usare `admin` / `123456789` per l'accesso amministrativo.
 
 ---
-**Sviluppato per il corso di:** Ingegneria del Software  
+**Sviluppato per il corso di:** Progettazione e Validazione di Sistemi Software
 **Docente:** Mariano Ceccato   
 **Università:** Università degli Studi di Verona   
 **Data esame:** Febbraio 2026 

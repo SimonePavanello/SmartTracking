@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartTrack | Nuova Spedizione</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+
+<nav class="bg-slate-800 border-b border-slate-700 p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+        <span class="text-xl font-bold text-blue-500"><i class="fas fa-truck-fast mr-2"></i>SMART TRACKING</span>
+        <a th:href="@{/web/shipments}" class="text-slate-400 hover:text-white transition"><i class="fas fa-times mr-2"></i>Annulla</a>
+    </div>
+</nav>
+
+<main class="container mx-auto mt-10 p-4 max-w-2xl">
+    <div class="bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-8">
+            <h2 class="text-2xl font-bold flex items-center gap-3">
+                <i class="fas fa-plus-circle"></i> Crea Nuova Spedizione
+            </h2>
+            <p class="text-blue-100 text-sm mt-1">Inserisci i dettagli per iniziare il monitoraggio del carico.</p>
+        </div>
+
+        <form th:action="@{/web/newShipment}" th:object="${shipment}" method="post" class="p-8 space-y-6">
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-400 mb-2">Codice Identificativo</label>
+                    <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500">
+                                <i class="fas fa-hashtag"></i>
+                            </span>
+                        <input type="text" th:field="*{code}" required
+                               class="w-full bg-slate-900 border border-slate-700 p-4 pl-12 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                               placeholder="Es: SH-2026-XYZ">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-400 mb-2">Destinazione</label>
+                    <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500">
+                                <i class="fas fa-location-dot"></i>
+                            </span>
+                        <input type="text" th:field="*{destination}" required
+                               class="w-full bg-slate-900 border border-slate-700 p-4 pl-12 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                               placeholder="Indirizzo o Città">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-400 mb-2">Descrizione Contenuto</label>
+                    <textarea th:field="*{description}" rows="3"
+                              class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                              placeholder="Es: Trasporto reagenti chimici fragili..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3 pt-6">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
+                    REGISTRA SPEDIZIONE
+                </button>
+                <p class="text-center text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+                    Modulo 3 - Logistica Integrata
+                </p>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

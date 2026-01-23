@@ -15,6 +15,14 @@ import java.util.List;
 @Getter
 public class Shipment extends AbstractEntity {
 
+    @Column(unique = true, nullable = false)
+    private String code; // Es: SH-2026-001
+
+    private String description;
+    private String destination;
+
+    private boolean active; // Se false, il sistema rifiuterà i dati dai sensori
+
     @OneToMany
     private List<Device> devices;
 

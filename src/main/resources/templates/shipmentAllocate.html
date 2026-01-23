@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartTrack | Associazione Device</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+
+<nav class="bg-slate-800 border-b border-slate-700 p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+        <span class="text-xl font-bold text-blue-500"><i class="fas fa-truck-fast mr-2"></i>SMART TRACKING</span>
+        <a th:href="@{/web/shipments}" class="text-slate-400 hover:text-white transition"><i class="fas fa-arrow-left mr-2"></i>Torna alle Spedizioni</a>
+    </div>
+</nav>
+
+<main class="container mx-auto mt-10 p-4 max-w-3xl">
+
+    <div th:if="${#lists.isEmpty(availableDevices)}" class="mb-6 p-4 bg-amber-900/50 border border-amber-500 text-amber-200 rounded-xl flex items-center justify-between">
+        <div class="flex items-center">
+            <i class="fas fa-exclamation-triangle mr-3"></i>
+            <span>Attenzione: Non ci sono sensori in stato <strong>READY</strong> disponibili.</span>
+        </div>
+        <a th:href="@{/web/provision}" class="text-xs bg-amber-500 text-slate-900 px-3 py-1 rounded-lg font-bold">Fai Provisioning</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div class="md:col-span-1 space-y-4">
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Target Spedizione</h3>
+                <div class="space-y-4">
+                    <div>
+                        <span class="block text-2xl font-bold text-blue-400" th:text="${shipment.code}">SH-001</span>
+                        <span class="text-sm text-slate-400" th:text="${shipment.destination}">Destinazione</span>
+                    </div>
+                    <div class="pt-4 border-t border-slate-700">
+                        <span class="block text-xs text-slate-500">Device attualmente legati:</span>
+                        <span class="text-xl font-mono" th:text="${#lists.size(shipment.devices)}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:col-span-2 bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6">Associa un nuovo sensore</h2>
+
+            <form th:action="@{/web/shipmentAllocate}" method="post" class="space-y-6">
+                <input type="hidden" name="shipmentId" th:value="${shipment.id}">
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-400 ml-1">Seleziona Device Hardware</label>
+                    <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500">
+                                <i class="fas fa-microchip"></i>
+                            </span>
+                        <select name="deviceUid" required
+                                class="w-full bg-slate-900 border border-slate-700 p-4 pl-12 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none transition text-white">
+                            <option value="" disabled selected>Scegli un sensore disponibile...</option>
+                            <option th:each="dev : ${availableDevices}"
+                                    th:value="${dev.uid}"
+                                    th:text="${dev.uid + ' (Interval: ' + dev.samplingIntervalSeconds + 's)'}">
+                                SN-X123
+                            </option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-500">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 text-xs text-slate-500">
+                    <p><i class="fas fa-info-circle mr-1 text-blue-500"></i> L'associazione cambierà automaticamente lo stato del device da <strong>READY</strong> a <strong>IN_USE</strong>.</p>
+                </div>
+
+                <button type="submit" th:disabled="${#lists.isEmpty(availableDevices)}"
+                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
+                    CONFERMA ALLOCAZIONE
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

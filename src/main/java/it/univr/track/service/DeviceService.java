@@ -60,4 +60,11 @@ public class DeviceService {
         log.info("Configurazione inviata al device " + device.getUid());
         return true;
     }
+
+    public List<Device> getReadyDevices(){
+        List<Device> deviceByStatusIs = deviceRepository.findDeviceByStatusIs(DeviceStatus.REGISTERED);
+        log.info("Devices found {}", deviceByStatusIs.size());
+        return deviceByStatusIs;
+    }
+
 }

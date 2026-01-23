@@ -1,8 +1,98 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title></title></head>
-<body>
+    <meta charset="UTF-8">
+    <title>SmartTrack | Spedizioni</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
 
+<nav class="bg-slate-800 border-b border-slate-700 p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+        <span class="text-xl font-bold text-blue-500"><i class="fas fa-truck-fast mr-2"></i>SMART TRACKING</span>
+        <div class="flex items-center gap-6">
+            <a th:href="@{/user/profile}" class="text-slate-400 hover:text-white transition text-sm">Profilo</a>
+            <a th:href="@{/web/newShipment}" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-bold transition">
+                + Nuova Spedizione
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main class="container mx-auto mt-10 p-4">
+    <div class="flex justify-between items-end mb-8">
+        <div>
+            <h1 class="text-3xl font-bold">Registro Spedizioni</h1>
+            <p class="text-slate-400 mt-2">Gestione logistica e attivazione tracking ambientale.</p>
+        </div>
+        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 text-sm">
+            <span class="text-slate-500">Totale: </span>
+            <span class="font-bold text-blue-400" th:text="${#lists.size(shipments)}">0</span>
+        </div>
+    </div>
+
+    <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead>
+            <tr class="bg-slate-700/50 text-slate-300 uppercase text-xs font-bold tracking-wider">
+                <th class="p-4">Codice Spedizione</th>
+                <th class="p-4">Destinazione</th>
+                <th class="p-4 text-center">Tracking</th>
+                <th class="p-4 text-center">Device Associati</th>
+                <th class="p-4 text-right">Azioni</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700">
+            <tr th:each="shipment : ${shipments}" class="hover:bg-slate-700/30 transition-colors group">
+                <td class="p-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-box text-blue-500 mr-3"></i>
+                        <span class="font-bold" th:text="${shipment.code}">SH-2026-001</span>
+                    </div>
+                    <div class="text-[10px] text-slate-500 mt-1" th:text="${shipment.description}">Descrizione...</div>
+                </td>
+                <td class="p-4 text-slate-300" th:text="${shipment.destination}">Milano, IT</td>
+                <td class="p-4 text-center">
+                    <form th:action="@{/web/tracking/{id}(id=${shipment.id})}" method="post">
+                        <button type="submit"
+                                th:class="${shipment.active ? 'bg-emerald-900/50 text-emerald-400 border-emerald-500/20' : 'bg-slate-700 text-slate-400 border-slate-600'} + ' px-3 py-1 rounded-full text-[10px] font-black border transition-all hover:scale-105'">
+                            <i th:class="${shipment.active ? 'fas fa-play mr-1' : 'fas fa-pause mr-1'}"></i>
+                            <span th:text="${shipment.active ? 'ATTIVO' : 'IN PAUSA'}"></span>
+                        </button>
+                    </form>
+                </td>
+                <td class="p-4 text-center">
+                            <span class="bg-slate-900 text-blue-400 px-2 py-1 rounded text-xs font-mono"
+                                  th:text="${#lists.size(shipment.devices)}">0</span>
+                </td>
+                <td class="p-4 text-right">
+                    <div class="flex justify-end gap-2">
+                        <a th:href="@{/web/shipmentAllocate/{id}(id=${shipment.id})}"
+                           class="p-2 bg-slate-700 hover:bg-blue-600 rounded-lg text-slate-300 hover:text-white transition"
+                           title="Associa Sensore">
+                            <i class="fas fa-link"></i>
+                        </a>
+                        <a th:href="@{/web/map(shipmentId=${shipment.id})}"
+                           class="p-2 bg-slate-700 hover:bg-amber-600 rounded-lg text-slate-300 hover:text-white transition"
+                           title="Vedi Mappa">
+                            <i class="fas fa-map-location-dot"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(shipments)}" class="p-20 text-center">
+            <div class="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-box-open text-2xl text-slate-500"></i>
+            </div>
+            <p class="text-slate-500">Nessuna spedizione registrata.</p>
+            <a th:href="@{/web/newShipment}" class="text-blue-500 hover:underline text-sm mt-2 inline-block">Crea la tua prima spedizione</a>
+        </div>
+    </div>
+</main>
 </body>
 </html>
