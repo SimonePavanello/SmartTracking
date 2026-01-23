@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -74,5 +71,54 @@ public class UserWebController {
 
         return "profile";
     }
+
+    @GetMapping("/list")
+    public String listUsers(Model model, Principal principal) {
+        // Recuperiamo l'utente loggato
+        UserRegistered currentUser = userService.findByUsername(principal.getName());
+        log.info("User found {}",currentUser.getUsername());
+
+        if ("ADMIN".equals(currentUser.getRole().name())) {
+            model.addAttribute("users", userService.getAllUsers());
+            return "users"; // Pagina con tabella di tutti gli utenti
+        } else {
+            model.addAttribute("user", currentUser);
+            return "user"; // Pagina profilo singolo
+        }
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        log.info("Delete user by id {}",id);
+        userService.deleteUser(id);
+        return "redirect:/web/users/list";
+    }
+
+    @GetMapping("/details")
+    public String userDetails(Model model, Principal principal) {
+        // 1. Recuperiamo lo username dell'utente loggato dalla sessione
+        String username = principal.getName();
+
+        // 2. Usiamo il service per recuperare l'entità User completa dal DB
+        UserRegistered user = userService.findByUsername(username);
+
+        // 3. Passiamo l'oggetto al model per Thymeleaf
+        model.addAttribute("user", user);
+
+        // 4. Restituiamo il nome del template (userProfile.html)
+        return "user";
+    }
+
+    @GetMapping("/details/{id}")
+    public String userDetailsById(@PathVariable Long id, Model model) {
+        // Recuperiamo l'utente specifico tramite ID
+        UserRegistered user = userService.getById(id);
+        model.addAttribute("user", user);
+
+        // Usiamo lo stesso template userProfile.html
+        return "user";
+    }
+
+
 
 }

@@ -3,6 +3,7 @@ package it.univr.track.controller.web;
 import it.univr.track.dto.DeviceConfigDTO;
 import it.univr.track.entity.Device;
 import it.univr.track.entity.UserRegistered;
+import it.univr.track.security.CustomUserProfileService;
 import it.univr.track.service.DeviceService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -20,10 +22,13 @@ public class DeviceWebController {
 
     @Autowired private DeviceService deviceService;
 
+    @Autowired private CustomUserProfileService customUserProfileService;
+
     // Vista Lista Devices
     @GetMapping("/web/devices")
-    public String devices(Model model) {
+    public String devices(Model model, Principal principal) {
         model.addAttribute("devices", deviceService.getAllDevices());
+        model.addAttribute("user", customUserProfileService.findByUsername(principal.getName()));
         return "devices";
     }
 

@@ -43,6 +43,7 @@ public class DeviceService {
     @Transactional
     public void decommissionDevice(Long id) {
         Device device = getById(id);
+        device.setShipment(null);
         device.setStatus(DeviceStatus.DECOMMISSIONED);
         deviceRepository.save(device);
     }

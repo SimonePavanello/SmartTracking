@@ -23,7 +23,8 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**"
                         ).permitAll()
-                        .requestMatchers("/web/provision/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
+                        .requestMatchers("/web/provision/**", "/web/decommission/**", "/users/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
+                        .requestMatchers("/web/shipments/**", "/web/devices/**").authenticated()
                         .requestMatchers("h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )

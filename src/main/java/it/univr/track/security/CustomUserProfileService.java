@@ -4,6 +4,7 @@ import it.univr.track.dto.UserDTO;
 import it.univr.track.entity.UserRegistered;
 import it.univr.track.entity.enumeration.Role;
 import it.univr.track.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Slf4j
@@ -49,5 +52,21 @@ public class CustomUserProfileService implements UserDetailsService {
 
     public UserRegistered findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow();
+    }
+
+    public UserRegistered getById(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
+    public List<UserRegistered> getAllUsers() {
+        return (List<UserRegistered>) userRepository.findAll();
+    }
+
+
+    // Solo Admin può eliminare
+    @Transactional
+    public void deleteUser(Long id) {
+        log.info("Delete user with id: {}",id);
+        userRepository.deleteById(id);
     }
 }
