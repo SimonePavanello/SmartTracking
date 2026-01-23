@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -27,6 +28,7 @@ public class DeviceService {
         Device device = new Device();
         device.setUid(uid);
         device.setStatus(DeviceStatus.REGISTERED);
+        device.setApiKey(UUID.randomUUID().toString());
         device.setSamplingIntervalSeconds(60); // Default config
         return deviceRepository.save(device);
     }

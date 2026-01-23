@@ -35,6 +35,7 @@
                 <th class="p-4">Stato</th>
                 <th class="p-4">Spedizione Associata</th>
                 <th class="p-4">Configurazione</th>
+                <th class="p-4">Api-KEY</th>
                 <th class="p-4 text-right">Azioni</th>
             </tr>
             </thead>
@@ -58,6 +59,13 @@
                 </td>
                 <td class="p-4 text-sm text-slate-300">
                     <i class="fas fa-clock mr-1 text-slate-500"></i> <span th:text="${device.samplingIntervalSeconds}">60</span>s
+                </td>
+                <td class="p-4 font-mono text-[10px] text-blue-400">
+                    <span th:id="'key-' + ${device.id}" th:text="${device.apiKey}">api-key-string</span>
+                    <button th:onclick="'copyToClipboard(\'key-' + ${device.id} + '\')'"
+                            class="ml-2 text-slate-500 hover:text-blue-400 transition-colors">
+                        <i class="fas fa-copy"></i>
+                    </button>
                 </td>
                 <td class="p-4 text-right">
                     <div class="flex justify-end gap-2">
@@ -83,3 +91,26 @@
 </main>
 </body>
 </html>
+
+<script>
+    function copyToClipboard(elementId) {
+        // 1. Prendi il testo dallo span
+        const text = document.getElementById(elementId).innerText;
+
+        // 2. Usa l'API moderna per copiare
+        navigator.clipboard.writeText(text).then(() => {
+            // Opzionale: un feedback visivo veloce
+            const btn = document.querySelector(`[onclick="copyToClipboard('${elementId}')"]`);
+            const originalIcon = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-check text-emerald-500"></i>';
+            setTimeout(() => {
+                btn.innerHTML = originalIcon;
+            }, 2000);
+
+            console.log('API Key copiata: ' + text);
+        }).catch(err => {
+            console.error('Errore durante la copia: ', err);
+        });
+    }
+</script>

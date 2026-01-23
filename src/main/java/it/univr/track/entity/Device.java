@@ -25,6 +25,9 @@ public class Device extends AbstractEntity {
     @Column(unique = true, nullable = false)
     private String uid; // ID da QR-code
 
+    @Column(unique = true)
+    private String apiKey; // La chiave segreta del sensore
+
     @Enumerated(EnumType.STRING)
     private DeviceStatus status; // READY, IN_USE, DECOMMISSIONED
 
