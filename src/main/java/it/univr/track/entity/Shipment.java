@@ -23,7 +23,8 @@ public class Shipment extends AbstractEntity {
 
     private boolean active; // Se false, il sistema rifiuterà i dati dai sensori
 
-    @OneToMany
+    @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL)
+
     private List<Device> devices;
 
 

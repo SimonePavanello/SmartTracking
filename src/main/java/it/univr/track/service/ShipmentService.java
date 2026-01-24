@@ -9,6 +9,7 @@ import it.univr.track.repository.ShipmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class ShipmentService {
         return shipmentRepository.findById(id).orElseThrow();
     }
 
+
+    @Transactional
     public void associateDeviceToShipment(Long shipmentId, String deviceUid) {
         // 1. Recupero la spedizione
         Shipment shipment = shipmentRepository.findById(shipmentId)
@@ -50,8 +53,8 @@ public class ShipmentService {
         Device device = deviceRepository.findByUid(deviceUid)
                 .orElseThrow(() -> new RuntimeException("Device non trovato con UID: " + deviceUid));
 
-        // 3. Controllo logico: il device deve essere libero (READY)
-        if (!"READY".equals(device.getStatus().toString())) {
+        // 3. Controllo logico: il device deve essere libero (REGISTERED)
+        if (!"REGISTERED".equals(device.getStatus().toString())) {
             throw new IllegalStateException("Il dispositivo non è disponibile per una nuova spedizione");
         }
 

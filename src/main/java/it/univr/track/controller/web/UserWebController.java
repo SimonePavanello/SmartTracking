@@ -91,7 +91,7 @@ public class UserWebController {
     public String deleteUser(@PathVariable Long id) {
         log.info("Delete user by id {}",id);
         userService.deleteUser(id);
-        return "redirect:/web/users/list";
+        return  "redirect:/user/list";
     }
 
     @GetMapping("/details")

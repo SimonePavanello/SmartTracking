@@ -2,6 +2,7 @@ package it.univr.track.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +25,7 @@ public class SecurityConfig {
                                 "/js/**"
                         ).permitAll()
                         .requestMatchers("/web/provision/**", "/web/decommission/**", "/users/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/device/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
                         .requestMatchers("/web/shipments/**", "/web/devices/**").authenticated()
                         .requestMatchers("h2-console/**").permitAll()
                         .anyRequest().authenticated()
