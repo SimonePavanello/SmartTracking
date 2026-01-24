@@ -50,7 +50,7 @@ public class ShipmentService {
                 .orElseThrow(() -> new RuntimeException("Spedizione non trovata con ID: " + shipmentId));
 
         // 2. Recupero il device tramite UID (quello del QR-code)
-        Device device = deviceRepository.findByUid(deviceUid)
+        Device device = deviceRepository.findDeviceByUuid(deviceUid)
                 .orElseThrow(() -> new RuntimeException("Device non trovato con UID: " + deviceUid));
 
         // 3. Controllo logico: il device deve essere libero (REGISTERED)

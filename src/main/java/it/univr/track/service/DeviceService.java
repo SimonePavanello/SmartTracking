@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -21,12 +22,12 @@ public class DeviceService {
     private DeviceRepository deviceRepository;
 
     @Transactional
-    public Device registerNewDevice(String uid) {
-        if (deviceRepository.existsByUid(uid)) {
-            throw new RuntimeException("Dispositivo già registrato");
+    public Device registerNewDevice(String uuid) {
+        if (deviceRepository.existsDeviceByUuid(uuid)) {
+            throw new RuntimeException("Device already registered with uuid: " + uuid);
         }
         Device device = new Device();
-        device.setUid(uid);
+        device.setUuid(uuid);
         device.setStatus(DeviceStatus.REGISTERED);
         device.setApiKey(UUID.randomUUID().toString());
         device.setSamplingIntervalSeconds(60); // Default config
@@ -39,32 +40,47 @@ public class DeviceService {
 
     public Device getById(Long id) {
         return deviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Device non trovato"));
+                .orElseThrow(() -> new RuntimeException("Device not found"));
+    }
+
+    public Optional<Device> getByUid(String uuid) {
+        log.info("Device with UUID: {}", uuid);
+        return deviceRepository.findDeviceByUuid(uuid);
     }
 
     @Transactional
-    public void decommissionDevice(Long id) {
-        Device device = getById(id);
-        device.setShipment(null);
-        device.setStatus(DeviceStatus.DECOMMISSIONED);
-        deviceRepository.save(device);
+    public void decommissionDevice(String uuid) {
+        Optional<Device> device = getByUid(uuid);
+        if (device.isEmpty()) {
+            throw new RuntimeException("Device not found");
+        }else {
+            device.get().setShipment(null);
+            device.get().setStatus(DeviceStatus.DECOMMISSIONED);
+            deviceRepository.save(device.get());
+        }
+
+
     }
 
     @Transactional
     public void updateConfiguration(DeviceConfigDTO config) {
-        Device device = getById(config.getDeviceId());
+        log.info("Received configuration update request: {} with device id: {}", config, config.getUuid());
+        Device device = getByUid(config.getUuid()).get();
         device.setSamplingIntervalSeconds(config.getInterval());
         deviceRepository.save(device);
     }
 
-    public boolean pushConfigToHardware(Long id) {
-        Device device = getById(id);
+    public boolean pushConfigToHardware(String uuid) {
+        Optional<Device> device = getByUid(uuid);
+        if (device.isEmpty()){
+            return false;
+        }
         // Qui andrebbe la logica di integrazione IoT (es. MQTT o HTTP call)
-        log.info("Configurazione inviata al device " + device.getUid());
+        log.info("Sending configuration to device {}", device.get().getUuid());
         return true;
     }
 
-    public List<Device> getReadyDevices(){
+    public List<Device> getReadyDevices() {
         List<Device> deviceByStatusIs = deviceRepository.findDeviceByStatusIs(DeviceStatus.REGISTERED);
         log.info("Devices found {}", deviceByStatusIs.size());
         return deviceByStatusIs;

@@ -31,7 +31,7 @@
         <table class="w-full text-left border-collapse">
             <thead>
             <tr class="bg-slate-700/50 text-slate-300 uppercase text-xs font-bold tracking-wider">
-                <th class="p-4">UID Dispositivo</th>
+                <th class="p-4">Nome dispositivo</th>
                 <th class="p-4">Stato</th>
                 <th class="p-4">Spedizione Associata</th>
                 <th class="p-4">Configurazione</th>
@@ -46,7 +46,7 @@
                         <div class="w-8 h-8 bg-slate-900 rounded flex items-center justify-center mr-3 text-blue-500">
                             <i class="fas fa-microchip"></i>
                         </div>
-                        <span class="font-mono font-medium" th:text="${device.uid}">SN-001</span>
+                        <span class="font-mono font-medium" th:text="${device.uuid}">SN-001</span>
                     </div>
                 </td>
                 <td class="p-4">
@@ -69,10 +69,10 @@
                 </td>
                 <td class="p-4 text-right">
                     <div class="flex justify-end gap-2">
-                        <a th:href="@{/web/configDevice/{id}(id=${device.id})}" class="p-2 hover:bg-slate-600 rounded-lg text-slate-400 hover:text-white transition" title="Configura">
+                        <a th:href="@{/web/configDevice/{uuid}(uuid=${device.uuid})}" class="p-2 hover:bg-slate-600 rounded-lg text-slate-400 hover:text-white transition" title="Configura">
                             <i class="fas fa-cog"></i>
                         </a>
-                        <form th:action="@{/web/decommission/{id}(id=${device.id})}" method="post" class="inline" onsubmit="return confirm('Sei sicuro di voler dismettere questo dispositivo?');">
+                        <form th:action="@{/web/decommission/{uuid}(uuid=${device.uuid})}" method="post" class="inline" onsubmit="return confirm('Sei sicuro di voler dismettere questo dispositivo?');">
                             <button type="submit" class="p-2 hover:bg-red-900/30 rounded-lg text-slate-400 hover:text-red-500 transition" title="Dismetti">
                                 <i class="fas fa-trash"></i>
                             </button>

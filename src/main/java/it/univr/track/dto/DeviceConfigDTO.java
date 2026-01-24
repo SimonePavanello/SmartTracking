@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 public class DeviceConfigDTO {
 
-    private Long deviceId;
+    private String uuid;
     private Integer interval;
 }

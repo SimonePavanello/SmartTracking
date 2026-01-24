@@ -20,7 +20,7 @@ public class Device extends AbstractEntity {
     private Shipment shipment;
 
     @Column(unique = true, nullable = false)
-    private String uid; // ID da QR-code
+    private String uuid; // ID da QR-code
 
     @Column(unique = true)
     @JsonIgnore

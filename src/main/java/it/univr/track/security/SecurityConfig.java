@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .requestMatchers("/web/provision/**", "/web/decommission/**", "/users/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/device/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
                         .requestMatchers("/web/shipments/**", "/web/devices/**").authenticated()
+                        .requestMatchers("/api/device/**").authenticated()
                         .requestMatchers("h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )

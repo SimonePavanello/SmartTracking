@@ -1,11 +1,8 @@
 package it.univr.track.controller.web;
 
 import it.univr.track.dto.DeviceConfigDTO;
-import it.univr.track.entity.Device;
-import it.univr.track.entity.UserRegistered;
 import it.univr.track.security.CustomUserProfileService;
 import it.univr.track.service.DeviceService;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 
 @Slf4j
@@ -47,33 +43,34 @@ public class DeviceWebController {
     }
 
     // Decommissioning
-    @PostMapping("/web/decommission/{id}")
-    public String decommission(@PathVariable Long id) {
-        log.info("Decommissioning di un dispositivo con ID: {}", id);
-        deviceService.decommissionDevice(id);
+    @PostMapping("/web/decommission/{uuid}")
+    public String decommission(@PathVariable String uuid) {
+        log.info("Decommissioning di un dispositivo con uuid: {}", uuid);
+        deviceService.decommissionDevice(uuid);
         return "redirect:/web/devices";
     }
 
     // Configurazione: Visualizzazione e Modifica
-    @GetMapping("/web/configDevice/{id}")
-    public String configDevice(@PathVariable Long id, Model model) {
-        log.info("Visualizzazione della configurazione del dispositivo con ID: {}", id);
-        model.addAttribute("device", deviceService.getById(id));
+    @GetMapping("/web/configDevice/{uuid}")
+    public String configDevice(@PathVariable String uuid, Model model) {
+        log.info("Show configDevice page for device with uuid: {}", uuid);
+        model.addAttribute("device", deviceService.getByUid(uuid).get());
         return "configDevice";
     }
 
     @PostMapping("/web/editConfigDevice")
     public String editConfigDevice(@ModelAttribute DeviceConfigDTO config) {
-        log.info("Modifica della configurazione del dispositivo con ID: {}", config.getDeviceId());
+        log.info("Received configDevice edit request: {} with device id: {}", config, config.getUuid());
         deviceService.updateConfiguration(config);
-        return "redirect:/web/configDevice/" + config.getDeviceId() + "?updated=true";
+        return "redirect:/web/configDevice/" + config.getUuid() + "?updated=true";
     }
 
     // Invia configurazione al sensore
-    @PostMapping("/web/sendConfigDevice/{id}")
-    public String sendConfigDevice(@PathVariable Long id) {
-        deviceService.pushConfigToHardware(id);
-        return "redirect:/web/configDevice/" + id + "?sent=true";
+    @PostMapping("/web/sendConfigDevice/{uuid}")
+    public String sendConfigDevice(@PathVariable String uuid) {
+        log.info("Sending configDevice to device with uuid: {}", uuid);
+        deviceService.pushConfigToHardware(uuid);
+        return "redirect:/web/configDevice/" + uuid + "?sent=true";
     }
 
 }
