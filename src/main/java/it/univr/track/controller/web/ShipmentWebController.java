@@ -29,7 +29,8 @@ public class ShipmentWebController {
 
     @PostMapping("/web/newShipment")
     public String saveShipment(@ModelAttribute Shipment shipment) {
-        log.info("Salvataggio nuova spedizione: {}", shipment.getCode());
+        log.info("Save new shipment: {}", shipment.getShipmentId());
+        log.info("Salvataggio nuova spedizione: {}", shipment.getShipmentId());
         shipmentService.createShipment(shipment);
         return "redirect:/web/shipments";
     }

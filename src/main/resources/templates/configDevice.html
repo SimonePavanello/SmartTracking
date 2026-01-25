@@ -45,7 +45,7 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="text-slate-400">Spedizione</span>
-                        <span th:text="${device.shipment != null ? device.shipment.code : 'Libero'}">SH-001</span>
+                        <span th:text="${device.shipment != null ? device.shipment.shipmentId : 'Libero'}">SH-001</span>
                     </div>
                 </div>
             </div>

@@ -16,7 +16,7 @@ import java.util.List;
 public class Shipment extends AbstractEntity {
 
     @Column(unique = true, nullable = false)
-    private String code; // Es: SH-2026-001
+    private String shipmentId; // Es: SH-2026-001
 
     private String description;
     private String destination;

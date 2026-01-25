@@ -42,6 +42,10 @@ public class DeviceService {
         return deviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Device not found"));
     }
+    public Optional<Device> findByApiKey(String apiKey) {
+        return deviceRepository.findDeviceByApiKey(apiKey);
+    }
+
 
     public Optional<Device> getByUid(String uuid) {
         log.info("Device with UUID: {}", uuid);

@@ -65,6 +65,6 @@ public class ShipmentService {
         // Salvataggio (gestito da @Transactional)
         deviceRepository.save(device);
 
-        log.info("Device {} associato con successo alla spedizione {}", deviceUid, shipment.getCode());
+        log.info("Device {} associato con successo alla spedizione {}", deviceUid, shipment.getShipmentId());
     }
 }

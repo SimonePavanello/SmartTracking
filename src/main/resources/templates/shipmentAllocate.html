@@ -33,7 +33,7 @@
                 <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Target Spedizione</h3>
                 <div class="space-y-4">
                     <div>
-                        <span class="block text-2xl font-bold text-blue-400" th:text="${shipment.code}">SH-001</span>
+                        <span class="block text-2xl font-bold text-blue-400" th:text="${shipment.shipmentId}">SH-001</span>
                         <span class="text-sm text-slate-400" th:text="${shipment.destination}">Destinazione</span>
                     </div>
                     <div class="pt-4 border-t border-slate-700">
@@ -60,8 +60,8 @@
                                 class="w-full bg-slate-900 border border-slate-700 p-4 pl-12 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none transition text-white">
                             <option value="" disabled selected>Scegli un sensore disponibile...</option>
                             <option th:each="dev : ${availableDevices}"
-                                    th:value="${dev.uid}"
-                                    th:text="${dev.uid + ' (Interval: ' + dev.samplingIntervalSeconds + 's)'}">
+                                    th:value="${dev.uuid}"
+                                    th:text="${dev.uuid + ' (Interval: ' + dev.samplingIntervalSeconds + 's)'}">
                                 SN-X123
                             </option>
                         </select>
