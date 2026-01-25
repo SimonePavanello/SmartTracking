@@ -50,7 +50,7 @@ public class DeviceWebController {
         return "redirect:/web/devices";
     }
 
-    // Configurazione: Visualizzazione e Modifica
+    // ConfigDevice
     @GetMapping("/web/configDevice/{uuid}")
     public String configDevice(@PathVariable String uuid, Model model) {
         log.info("Show configDevice page for device with uuid: {}", uuid);
@@ -65,7 +65,7 @@ public class DeviceWebController {
         return "redirect:/web/configDevice/" + config.getUuid() + "?updated=true";
     }
 
-    // Invia configurazione al sensore
+    // Send Config to device
     @PostMapping("/web/sendConfigDevice/{uuid}")
     public String sendConfigDevice(@PathVariable String uuid) {
         log.info("Sending configDevice to device with uuid: {}", uuid);

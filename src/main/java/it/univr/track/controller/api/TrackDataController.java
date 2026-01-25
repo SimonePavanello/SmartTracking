@@ -52,8 +52,9 @@ public class TrackDataController {
     }
 
     @GetMapping("/shipment/{shipmentId}")
-    public List<TrackData> readDataByShipment(@PathVariable("shipmentId") Long shipmentId) {
-        return trackingDataRepository.findByShipmentIdOrderByTimestampAsc(shipmentId);
+    public List<TrackData> readDataByShipment(@PathVariable("shipmentId") String shipmentId) {
+        log.info("Read data for shipment {}", shipmentId);
+        return trackingDataRepository.findByShipment_ShipmentId(shipmentId);
     }
 
 }

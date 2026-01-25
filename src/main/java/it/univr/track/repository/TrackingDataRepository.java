@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TrackingDataRepository extends JpaRepository<TrackData, Long> {
 
-    List<TrackData> findByShipmentIdOrderByTimestampAsc(Long shipmentId);
+    List<TrackData> findByShipment_ShipmentId(String shipmentId);
 }

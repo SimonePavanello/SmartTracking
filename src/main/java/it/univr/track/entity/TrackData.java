@@ -21,7 +21,7 @@ public class TrackData extends AbstractEntity {
     private Device device;
 
     @ManyToOne
-    @JoinColumn(name = "shipment_id")
+    @JoinColumn(name = "shipmentId")
     private Shipment shipment;
     private Double latitude;
     private Double longitude;
