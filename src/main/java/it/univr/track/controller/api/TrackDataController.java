@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -30,10 +31,14 @@ public class TrackDataController {
     @PostMapping("/data")
     public ResponseEntity<?> writeData(@RequestHeader("X-API-KEY") String apiKey,
                                        @RequestBody TrackingDataDTO dto) {
-        Device device = deviceService.findByApiKey(apiKey)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        log.info("Received data: {}", dto);
+        Optional<Device> device = deviceService.findByApiKey(apiKey);
 
-        if (device.getStatus() != DeviceStatus.ACTIVE || device.getShipment() == null) {
+        if (device.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid API Key");
+        }
+
+        if (device.get().getStatus() != DeviceStatus.ACTIVE || device.get().getShipment() == null) {
             return ResponseEntity.badRequest().body("Device not active or not associated to a shipment");
         }
 
@@ -43,8 +48,8 @@ public class TrackDataController {
         data.setLatitude(dto.getLatitude());
         data.setLongitude(dto.getLongitude());
         data.setTimestamp(LocalDateTime.now());
-        data.setDevice(device);
-        data.setShipment(device.getShipment());
+        data.setDevice(device.get());
+        data.setShipment(device.get().getShipment());
 
         trackingDataRepository.save(data);
         log.info("Data received");

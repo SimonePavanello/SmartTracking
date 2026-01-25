@@ -17,18 +17,20 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/tracking/**").permitAll()
                         .requestMatchers(
                                 "/user/signup",
                                 "/user/signin",
                                 "/css/**",
                                 "/js/**"
                         ).permitAll()
+                        .requestMatchers("h2-console/**").permitAll()
                         .requestMatchers("/web/provision/**", "/web/decommission/**", "/users/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/device/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
                         .requestMatchers("/web/shipments/**", "/web/devices/**","/web/map/**").authenticated()
                         .requestMatchers("/api/device/**").authenticated()
-                        .requestMatchers("h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
