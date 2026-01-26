@@ -19,6 +19,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/tracking/**").permitAll()
                         .requestMatchers(
                                 "/user/signup",
@@ -26,13 +27,13 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**"
                         ).permitAll()
-                        .requestMatchers("h2-console/**").permitAll()
                         .requestMatchers("/web/provision/**", "/web/decommission/**", "/users/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/device/**").hasAnyAuthority("ROLE_ADMIN", "ADMIN")
                         .requestMatchers("/web/shipments/**", "/web/devices/**","/web/map/**").authenticated()
                         .requestMatchers("/api/device/**").authenticated()
                         .anyRequest().authenticated()
                 )
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .formLogin(form -> form
                         .loginPage("/user/signin")
                         .loginProcessingUrl("/user/signin")

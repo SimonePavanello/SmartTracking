@@ -47,7 +47,11 @@ public class ShipmentService {
     public void associateDeviceToShipment(Long shipmentId, String deviceUid) {
 
         Shipment shipment = shipmentRepository.findById(shipmentId)
-                .orElseThrow(() -> new RuntimeException("Shimpement not found with ID: " + shipmentId));
+                .orElseThrow(() -> new RuntimeException("Shipment not found with ID: " + shipmentId));
+
+        if (!shipment.isActive()) {
+            throw new IllegalStateException("Impossible to associate a device to a shipment that is not active");
+        }
 
 
         Device device = deviceRepository.findDeviceByUuid(deviceUid)

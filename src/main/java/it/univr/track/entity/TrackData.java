@@ -1,5 +1,7 @@
 package it.univr.track.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +20,12 @@ public class TrackData extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "uuid")
+    @JsonIgnoreProperties({"shipment",  "apiKey"})
     private Device device;
 
     @ManyToOne
     @JoinColumn(name = "shipmentId")
+    @JsonIgnore
     private Shipment shipment;
     private Double latitude;
     private Double longitude;
