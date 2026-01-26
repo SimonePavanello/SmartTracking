@@ -65,4 +65,11 @@ public class ShipmentWebController {
         return "redirect:/web/shipments";
     }
 
+    @PostMapping("/web/shipments/{shipmentId}/complete")
+    public String completeShipment(@PathVariable String shipmentId) {
+        log.info("Shipment {} completed", shipmentId);
+        shipmentService.closeShipment(shipmentId);
+        return "redirect:/web/shipments";
+    }
+
 }

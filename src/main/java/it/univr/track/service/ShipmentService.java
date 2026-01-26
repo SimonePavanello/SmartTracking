@@ -28,7 +28,7 @@ public class ShipmentService {
     }
 
     public Shipment createShipment(Shipment shipment) {
-        shipment.setActive(true); // Di default una nuova spedizione è attiva
+        shipment.setActive(true);
         return shipmentRepository.save(shipment);
     }
 
@@ -45,26 +45,41 @@ public class ShipmentService {
 
     @Transactional
     public void associateDeviceToShipment(Long shipmentId, String deviceUid) {
-        // 1. Recupero la spedizione
+
         Shipment shipment = shipmentRepository.findById(shipmentId)
-                .orElseThrow(() -> new RuntimeException("Spedizione non trovata con ID: " + shipmentId));
+                .orElseThrow(() -> new RuntimeException("Shimpement not found with ID: " + shipmentId));
 
-        // 2. Recupero il device tramite UID (quello del QR-code)
+
         Device device = deviceRepository.findDeviceByUuid(deviceUid)
-                .orElseThrow(() -> new RuntimeException("Device non trovato con UID: " + deviceUid));
+                .orElseThrow(() -> new RuntimeException("Device not found with UID: " + deviceUid));
 
-        // 3. Controllo logico: il device deve essere libero (REGISTERED)
+
         if (!"REGISTERED".equals(device.getStatus().toString())) {
-            throw new IllegalStateException("Il dispositivo non è disponibile per una nuova spedizione");
+            throw new IllegalStateException("The device is not available for a new shipment");
         }
 
-        // 4. Eseguo l'associazione bidirezionale
         device.setShipment(shipment);
-        device.setStatus(DeviceStatus.ACTIVE); // Cambio stato
+        device.setStatus(DeviceStatus.ACTIVE);
 
-        // Salvataggio (gestito da @Transactional)
+
         deviceRepository.save(device);
 
-        log.info("Device {} associato con successo alla spedizione {}", deviceUid, shipment.getShipmentId());
+        log.info("Device {} connect successfully to shipment {}", deviceUid, shipment.getShipmentId());
+    }
+
+    @Transactional
+    public void closeShipment(String shipmentId) {
+        log.info("Closing shipment {}", shipmentId);
+        Shipment shipment = shipmentRepository.findShipmentByShipmentId(shipmentId).orElseThrow();
+        shipment.setActive(false);
+
+
+        for (Device d : shipment.getDevices()) {
+            d.setStatus(DeviceStatus.REGISTERED);
+            d.setShipment(null);
+        }
+        shipmentRepository.save(shipment);
+
+        log.info("Shipment {} closed", shipmentId);
     }
 }

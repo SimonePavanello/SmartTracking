@@ -81,6 +81,23 @@
                         </a>
                     </div>
                 </td>
+                <td class="px-6 py-4">
+                    <div th:if="${shipment.active}">
+                        <form th:action="@{/web/shipments/{shipmentId}/complete(shipmentId=${shipment.shipmentId})}" method="post">
+                            <button type="submit"
+                                    onclick="return confirm('Vuoi completare la spedizione e liberare i sensori?')"
+                                    class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-lg transition shadow-lg flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> COMPLETA
+                            </button>
+                        </form>
+                    </div>
+
+                    <div th:unless="${shipment.active}">
+        <span class="bg-slate-700 text-slate-400 text-xs px-3 py-1 rounded-full border border-slate-600">
+            ARCHIVIATA
+        </span>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
