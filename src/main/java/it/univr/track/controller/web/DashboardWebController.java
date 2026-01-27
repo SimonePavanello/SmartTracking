@@ -20,24 +20,7 @@ public class DashboardWebController {
         model.addAttribute("activeShipments", shipmentService.getAllShipments());
         return "map";
     }
-//
-//    //visualize the status of all devices
-//    @RequestMapping("/web/devices")
-//    public String devices() {
-//        return "devices";
-//    }
-//
-//   // visualize the status of all shipments
-//    @RequestMapping("/web/shipments")
-//    public String shipments() {
-//        return "shipments";
-//    }
-//
-//    //visualize the status of a single shipment
-//    @RequestMapping("/web/shipment")
-//    public String shipment() {
-//        return "shipment";
-//    }
+
 
 
 }

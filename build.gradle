@@ -36,6 +36,31 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+
+    // RestAssured per E2E Testing
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+    testImplementation 'io.rest-assured:json-path:5.4.0'
+    testImplementation 'io.rest-assured:xml-path:5.4.0'
+
+    // JSON Processing
+    testImplementation 'com.google.code.gson:gson:2.10.1'
+    testImplementation 'org.json:json:20231013'
+
+    // JUnit 5 (Jupiter)
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.1'
+
+
+    // Hamcrest Matchers (per asserzioni più espressive)
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+
+    // AssertJ (opzionale, per asserzioni fluent)
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.3.3'
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.24.0'
 }
 
 tasks.named('test') {
