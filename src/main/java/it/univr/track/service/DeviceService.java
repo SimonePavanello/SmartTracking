@@ -30,7 +30,7 @@ public class DeviceService {
         device.setUuid(uuid);
         device.setStatus(DeviceStatus.REGISTERED);
         device.setApiKey(UUID.randomUUID().toString());
-        device.setSamplingIntervalSeconds(60); // Default config
+        device.setSamplingIntervalSeconds(60);
         return deviceRepository.save(device);
     }
 

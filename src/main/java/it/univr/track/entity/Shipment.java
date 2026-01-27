@@ -16,12 +16,12 @@ import java.util.List;
 public class Shipment extends AbstractEntity {
 
     @Column(unique = true, nullable = false)
-    private String shipmentId; // Es: SH-2026-001
+    private String shipmentId;
 
     private String description;
     private String destination;
 
-    private boolean active; // Se false, il sistema rifiuterà i dati dai sensori
+    private boolean active;
 
     @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL)
 

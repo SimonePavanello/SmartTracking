@@ -20,7 +20,6 @@ public class ShipmentWebController {
     @Autowired
     private DeviceService deviceService;
 
-    //create new shipment
     @GetMapping("/web/newShipment")
     public String newShipment(Model model) {
         model.addAttribute("shipment", new Shipment());
@@ -35,21 +34,18 @@ public class ShipmentWebController {
         return "redirect:/web/shipments";
     }
 
-    //list shipments
     @RequestMapping("/web/shipments")
     public String shipments(Model model) {
         model.addAttribute("shipments", shipmentService.getAllShipments());
         return "shipments";
     }
 
-    //activate/deactivate tracking
     @PostMapping("/web/tracking/{id}")
     public String tracking(@PathVariable Long id) {
         shipmentService.toggleStatus(id);
         return "redirect:/web/shipments";
     }
 
-    //allocate a device to a shipment
     @GetMapping("/web/shipmentAllocate/{id}")
     public String shipmentAllocate(@PathVariable Long id, Model model) {
         Shipment shipment = shipmentService.getById(id);

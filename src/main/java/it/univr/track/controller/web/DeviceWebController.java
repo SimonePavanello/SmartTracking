@@ -20,7 +20,6 @@ public class DeviceWebController {
 
     @Autowired private CustomUserProfileService customUserProfileService;
 
-    // Vista Lista Devices
     @GetMapping("/web/devices")
     public String devices(Model model, Principal principal) {
         model.addAttribute("devices", deviceService.getAllDevices());
@@ -28,13 +27,11 @@ public class DeviceWebController {
         return "devices";
     }
 
-    // Provisioning (Mostra Form)
     @GetMapping("/web/provision")
     public String provision() {
         return "provision";
     }
 
-    // Provisioning (Esegue Azione)
     @PostMapping("/web/provision")
     public String doProvision(@RequestParam String uid) {
         log.info("Provisioning di un nuovo dispositivo con UID: {}", uid);
@@ -42,7 +39,6 @@ public class DeviceWebController {
         return "redirect:/web/devices";
     }
 
-    // Decommissioning
     @PostMapping("/web/decommission/{uuid}")
     public String decommission(@PathVariable String uuid) {
         log.info("Decommissioning di un dispositivo con uuid: {}", uuid);
@@ -50,7 +46,6 @@ public class DeviceWebController {
         return "redirect:/web/devices";
     }
 
-    // ConfigDevice
     @GetMapping("/web/configDevice/{uuid}")
     public String configDevice(@PathVariable String uuid, Model model) {
         log.info("Show configDevice page for device with uuid: {}", uuid);
@@ -65,7 +60,6 @@ public class DeviceWebController {
         return "redirect:/web/configDevice/" + config.getUuid() + "?updated=true";
     }
 
-    // Send Config to device
     @PostMapping("/web/sendConfigDevice/{uuid}")
     public String sendConfigDevice(@PathVariable String uuid) {
         log.info("Sending configDevice to device with uuid: {}", uuid);

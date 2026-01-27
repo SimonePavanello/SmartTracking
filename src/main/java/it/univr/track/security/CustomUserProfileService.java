@@ -32,7 +32,6 @@ public class CustomUserProfileService implements UserDetailsService {
     }
 
     public void registerNewUser(UserDTO userDto) {
-        // Verifica se esiste già
         if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new RuntimeException("Username già occupato");
         }
@@ -40,10 +39,8 @@ public class CustomUserProfileService implements UserDetailsService {
         UserRegistered newUser = new UserRegistered();
         newUser.setUsername(userDto.getUsername());
 
-        // CRUCIALE: Criptiamo la password prima di salvarla
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        // Assegniamo il ruolo (es. ROLE_USER di default o quello dal DTO)
         newUser.setRole(Role.valueOf(userDto.getRole()));
 
         userRepository.save(newUser);
@@ -63,7 +60,6 @@ public class CustomUserProfileService implements UserDetailsService {
     }
 
 
-    // Solo Admin può eliminare
     @Transactional
     public void deleteUser(Long id) {
         log.info("Delete user with id: {}",id);

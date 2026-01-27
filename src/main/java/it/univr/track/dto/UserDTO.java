@@ -16,9 +16,8 @@ public class UserDTO {
     private String confirmPassword;
 
     @NotBlank(message = "Selezionare un ruolo")
-    private String role; // ADMIN o USER
+    private String role;
 
-    // Getter e Setter
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
@@ -31,9 +30,7 @@ public class UserDTO {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
 
-    /**
-     * Business logic nel DTO per validare la corrispondenza delle password.
-     */
+
     public boolean passwordsMatch() {
         return password != null && password.equals(confirmPassword);
     }

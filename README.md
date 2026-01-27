@@ -16,10 +16,7 @@
 2. [Requisiti](#2-Requisiti)
 3. [Attori](#3-Attori)
 4. [Scenari](#4-Scenari)
-5. [Test Selection](#5-test-selection)
-6. [Test Coverage](#6-test-coverage)
-7. [Conclusioni](#7-conclusioni)
-8. [Appendici](#8-appendici)
+
 
 ---
 

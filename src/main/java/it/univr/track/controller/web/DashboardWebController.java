@@ -16,7 +16,6 @@ public class DashboardWebController {
 
     @GetMapping
     public String showMap(Model model) {
-        // Carichiamo solo le spedizioni che hanno dei device associati
         model.addAttribute("activeShipments", shipmentService.getAllShipments());
         return "map";
     }
