@@ -33,15 +33,16 @@ public class TrackDataController {
                                        @RequestBody TrackingDataDTO dto) {
         log.info("Received data: {}", dto);
         Optional<Device> device = deviceService.findByApiKey(apiKey);
+        if (device.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid API Key");
+        }
         Shipment currentShipment = device.get().getShipment();
         if (currentShipment == null || !currentShipment.isActive()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Error: The device is not associated to a shipment or the shipment is not active");
         }
 
-        if (device.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid API Key");
-        }
+
 
         if (device.get().getStatus() != DeviceStatus.ACTIVE || device.get().getShipment() == null) {
             return ResponseEntity.badRequest().body("Device not active or not associated to a shipment");
