@@ -34,5 +34,7 @@ public class ShipmentPage extends BasePage{
         // Gestione del popup di conferma nativo del browser
         wait.until(ExpectedConditions.alertIsPresent());
         driver.switchTo().alert().accept();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(text(), 'ARCHIVIATA')]")));
     }
 }

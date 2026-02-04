@@ -9,7 +9,7 @@ public class DeviceListPage extends BasePage{
         super(driver);
     }
 
-    public void decommissionDevice(String uuid) {
+    public String decommissionDevice(String uuid) {
         driver.get("http://localhost:8080/web/devices");
 
         // XPath dinamico per trovare il tasto "Dismetti" (icona trash) nella riga del device specifico
@@ -23,6 +23,11 @@ public class DeviceListPage extends BasePage{
         driver.switchTo().alert().accept();
 
         wait.until(ExpectedConditions.urlContains("/web/devices"));
+
+        String rowXpath = String.format("//tr[contains(., '%s')]", uuid);
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath(rowXpath), "DISMESSO"));
+
+        return rowXpath;
 
     }
 

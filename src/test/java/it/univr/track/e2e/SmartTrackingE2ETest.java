@@ -9,6 +9,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -24,9 +27,9 @@ public class SmartTrackingE2ETest {
 
     @BeforeAll
     static void setup() {
-        WebDriverManager.chromedriver().create();
-        ChromeOptions options = new ChromeOptions();
-        driver = new ChromeDriver(options);
+        WebDriverManager.firefoxdriver().create();
+        FirefoxOptions options = new FirefoxOptions();
+        driver = new FirefoxDriver(options);
 
         provisionPage = new ProvisionPage(driver);
         shipmentPage = new ShipmentPage(driver);
@@ -139,7 +142,6 @@ public class SmartTrackingE2ETest {
     }
 
 
-
     @Test
     @DisplayName("UC8 - Decommissioning di un dispositivo")
     void testDecommissionDevice() {
@@ -151,16 +153,11 @@ public class SmartTrackingE2ETest {
         String devToKill = "DEV-TO-KILL-" + System.currentTimeMillis();
         provisionPage.registerDevice(devToKill);
 
-        // 2. Esecuzione: Dismettiamo il dispositivo
-        deviceListPage.decommissionDevice(devToKill);
 
+        String rowXpath = deviceListPage.decommissionDevice(devToKill);
 
-
-        // Cerchiamo la riga del device e verifichiamo che contenga l'etichetta DISMESSO
-        String rowXpath = String.format("//tr[contains(., '%s')]", devToKill);
-        deviceListPage.await(rowXpath);
         String rowText = driver.findElement(By.xpath(rowXpath)).getText();
-        assertTrue(rowText.contains("DISMESSO"));
+        assertTrue(rowText.equalsIgnoreCase("DISMESSO") || rowText.contains("DISMESSO"));
     }
 
     @Test
