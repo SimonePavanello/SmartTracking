@@ -1,6 +1,7 @@
 package it.univr.track.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.univr.track.dto.DeviceConfigDTO;
 import it.univr.track.entity.Device;
 import it.univr.track.service.DeviceService;
 import org.junit.jupiter.api.DisplayName;
@@ -13,12 +14,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -77,7 +79,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("Lettura Configurazione - Fallisce con API Key errata")
+    @DisplayName("Lettura Configurazione - API Key non valida")
     @WithMockUser
     void testReadDeviceConfigUnauthorized() throws Exception {
         Device device = new Device();
@@ -93,13 +95,43 @@ class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("Lettura Configurazione - Device non trovato")
+    @DisplayName("UC2 - Modifica configurazione dispositivo (API)")
     @WithMockUser
-    void testReadDeviceConfigNotFound() throws Exception {
-        when(deviceService.getByUid(anyString())).thenReturn(Optional.empty());
+    void testEditDevice() throws Exception {
+        DeviceConfigDTO configDto = new DeviceConfigDTO();
+        configDto.setUuid("SN-123");
+        configDto.setInterval(30);
 
-        mockMvc.perform(get("/api/device/UNKNOWN")
-                        .header("X-API-KEY", "any"))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(put("/api/device/api/device")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(configDto)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+
+        verify(deviceService).updateConfiguration(any(DeviceConfigDTO.class));
+    }
+
+    @Test
+    @DisplayName("UC8 - Dismissione dispositivo (API - Solo Admin)")
+    @WithMockUser(roles = "ADMIN")
+    void testDecommissionDeviceApi() throws Exception {
+        mockMvc.perform(delete("/api/device/SN-123"))
+                .andExpect(status().isNoContent());
+
+        verify(deviceService).decommissionDevice("SN-123");
+    }
+
+    @Test
+    @DisplayName("Lista Dispositivi (API)")
+    @WithMockUser
+    void testGetDevicesListApi() throws Exception {
+        Device d1 = new Device();
+        d1.setUuid("SN-1");
+
+        when(deviceService.getAllDevices()).thenReturn(List.of(d1));
+
+        mockMvc.perform(get("/api/device/api/devices"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].uuid").value("SN-1"));
     }
 }
