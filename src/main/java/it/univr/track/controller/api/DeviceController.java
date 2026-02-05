@@ -3,8 +3,8 @@ package it.univr.track.controller.api;
 import it.univr.track.dto.DeviceConfigDTO;
 import it.univr.track.entity.Device;
 import it.univr.track.service.DeviceService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,10 +16,11 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/api/device")
+@RequiredArgsConstructor
 public class DeviceController {
 
-    @Autowired
-    private DeviceService deviceService;
+
+    private final DeviceService deviceService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -66,7 +67,7 @@ public class DeviceController {
 
     @GetMapping("/api/devices")
     public ResponseEntity<List<Device>> devices() {
-        return ResponseEntity.ok(deviceService.getAllDevices()); //
+        return ResponseEntity.ok(deviceService.getAllDevices());
     }
 
 

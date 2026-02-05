@@ -5,6 +5,7 @@ import it.univr.track.entity.UserRegistered;
 import it.univr.track.entity.enumeration.Role;
 import it.univr.track.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,12 +19,13 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomUserProfileService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

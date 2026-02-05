@@ -5,6 +5,7 @@ import it.univr.track.dto.DeviceConfigDTO;
 import it.univr.track.entity.Device;
 import it.univr.track.entity.enumeration.DeviceStatus;
 import it.univr.track.repository.DeviceRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,11 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DeviceService {
 
-    @Autowired
-    private DeviceRepository deviceRepository;
+
+    private final DeviceRepository deviceRepository;
 
     @Transactional
     public Device registerNewDevice(String uuid) {

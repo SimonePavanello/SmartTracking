@@ -4,6 +4,7 @@ import it.univr.track.dto.TrackingDataDTO;
 import it.univr.track.entity.enumeration.DeviceStatus;
 import it.univr.track.repository.TrackingDataRepository;
 import it.univr.track.service.DeviceService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,13 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/api/tracking")
+@RequiredArgsConstructor
 public class TrackDataController {
 
-    @Autowired
-    private DeviceService deviceService;
-    @Autowired
-    private TrackingDataRepository trackingDataRepository;
+
+    private final DeviceService deviceService;
+
+    private final TrackingDataRepository trackingDataRepository;
 
     @PostMapping("/data")
     public ResponseEntity<?> writeData(@RequestHeader("X-API-KEY") String apiKey,

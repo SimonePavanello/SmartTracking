@@ -3,6 +3,7 @@ package it.univr.track.controller.web;
 import it.univr.track.dto.DeviceConfigDTO;
 import it.univr.track.security.CustomUserProfileService;
 import it.univr.track.service.DeviceService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,11 +15,12 @@ import java.security.Principal;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class DeviceWebController {
 
-    @Autowired private DeviceService deviceService;
+     private final DeviceService deviceService;
 
-    @Autowired private CustomUserProfileService customUserProfileService;
+     private final CustomUserProfileService customUserProfileService;
 
     @GetMapping("/web/devices")
     public String devices(Model model, Principal principal) {

@@ -5,7 +5,6 @@ import it.univr.track.entity.Device;
 import it.univr.track.entity.enumeration.DeviceStatus;
 import it.univr.track.repository.DeviceRepository;
 import it.univr.track.service.DeviceService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DeviceServiceTest {
+class DeviceServiceTest {
 
     @Mock
     private DeviceRepository deviceRepository;
@@ -33,7 +32,6 @@ public class DeviceServiceTest {
     @Test
     @DisplayName("Registrazione nuovo device - Successo")
     void testRegisterNewDeviceSuccess() {
-        // Setup mock: il device non esiste ancora
         when(deviceRepository.existsDeviceByUuid(testUuid)).thenReturn(false);
         when(deviceRepository.save(any(Device.class))).thenAnswer(i -> i.getArguments()[0]);
 
@@ -50,14 +48,13 @@ public class DeviceServiceTest {
     @Test
     @DisplayName("Registrazione nuovo device - Errore se già esistente")
     void testRegisterNewDeviceFail() {
-        // Setup mock: il device esiste già
         when(deviceRepository.existsDeviceByUuid(testUuid)).thenReturn(true);
 
         assertThrows(RuntimeException.class, () -> deviceService.registerNewDevice(testUuid));
     }
 
     @Test
-    @DisplayName("Decommissioning device - Successo")
+    @DisplayName("Decommissioning device - Success")
     void testDecommissionDeviceSuccess() {
         Device device = new Device();
         device.setUuid(testUuid);
@@ -70,6 +67,21 @@ public class DeviceServiceTest {
         assertEquals(DeviceStatus.DECOMMISSIONED, device.getStatus());
         assertNull(device.getShipment());
         verify(deviceRepository).save(device);
+    }
+
+    @Test
+    @DisplayName("UC8 - Decommissioning Fallito (Device non trovato)")
+    void testDecommissionDeviceFailed() {
+        String invalidUuid = "NON-EXISTENT-ID";
+        when(deviceRepository.findDeviceByUuid(invalidUuid)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            deviceService.decommissionDevice(invalidUuid);
+        });
+
+        assertEquals("Device not found", exception.getMessage());
+
+        verify(deviceRepository, never()).save(any(Device.class));
     }
 
     @Test

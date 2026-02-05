@@ -3,6 +3,7 @@ package it.univr.track.controller.web;
 import it.univr.track.entity.Shipment;
 import it.univr.track.service.DeviceService;
 import it.univr.track.service.ShipmentService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,13 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class ShipmentWebController {
 
-    @Autowired
-    private ShipmentService shipmentService;
 
-    @Autowired
-    private DeviceService deviceService;
+    public static final String REDIRECT_WEB_SHIPMENTS = "redirect:/web/shipments";
+    private final ShipmentService shipmentService;
+
+
+    private final DeviceService deviceService;
 
     @GetMapping("/web/newShipment")
     public String newShipment(Model model) {
@@ -31,7 +34,7 @@ public class ShipmentWebController {
         log.info("Save new shipment: {}", shipment.getShipmentId());
         log.info("Salvataggio nuova spedizione: {}", shipment.getShipmentId());
         shipmentService.createShipment(shipment);
-        return "redirect:/web/shipments";
+        return REDIRECT_WEB_SHIPMENTS;
     }
 
     @RequestMapping("/web/shipments")
@@ -43,7 +46,7 @@ public class ShipmentWebController {
     @PostMapping("/web/tracking/{id}")
     public String tracking(@PathVariable Long id) {
         shipmentService.toggleStatus(id);
-        return "redirect:/web/shipments";
+        return REDIRECT_WEB_SHIPMENTS;
     }
 
     @GetMapping("/web/shipmentAllocate/{id}")
@@ -58,14 +61,14 @@ public class ShipmentWebController {
     @PostMapping("/web/shipmentAllocate")
     public String doAllocate(@RequestParam Long shipmentId, @RequestParam String deviceUid) {
         shipmentService.associateDeviceToShipment(shipmentId, deviceUid);
-        return "redirect:/web/shipments";
+        return REDIRECT_WEB_SHIPMENTS;
     }
 
     @PostMapping("/web/shipments/{shipmentId}/complete")
     public String completeShipment(@PathVariable String shipmentId) {
         log.info("Shipment {} completed", shipmentId);
         shipmentService.closeShipment(shipmentId);
-        return "redirect:/web/shipments";
+        return REDIRECT_WEB_SHIPMENTS;
     }
 
 }

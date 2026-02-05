@@ -6,6 +6,7 @@ import it.univr.track.entity.Shipment;
 import it.univr.track.entity.enumeration.DeviceStatus;
 import it.univr.track.repository.DeviceRepository;
 import it.univr.track.repository.ShipmentRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,14 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ShipmentService {
 
-    @Autowired
-    private ShipmentRepository shipmentRepository;
 
-    @Autowired
-    private DeviceRepository deviceRepository;
+    private final ShipmentRepository shipmentRepository;
+
+
+    private final DeviceRepository deviceRepository;
 
     public List<Shipment> getAllShipments() {
         return shipmentRepository.findAll();

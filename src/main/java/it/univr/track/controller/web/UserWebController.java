@@ -4,6 +4,7 @@ import it.univr.track.dto.UserDTO;
 import it.univr.track.entity.UserRegistered;
 import it.univr.track.security.CustomUserProfileService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +17,12 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/user")
 @Slf4j
+@RequiredArgsConstructor
 public class UserWebController {
 
-    @Autowired
-    private CustomUserProfileService userService;
+    private final CustomUserProfileService userService;
+
+    private static final String SIGN_UP_VIEW = "signUp";
 
     @GetMapping("/signin")
     public String signIn() {
@@ -29,7 +32,7 @@ public class UserWebController {
     @GetMapping("/signup")
     public String signUp(Model model) {
         model.addAttribute("userDto", new UserDTO());
-        return "signUp";
+        return SIGN_UP_VIEW;
     }
 
     @PostMapping("/signup")
@@ -40,13 +43,13 @@ public class UserWebController {
 
         if (result.hasErrors()) {
             log.error("Errore di validazione del form di registrazione: {}", result.getAllErrors());
-            return "signUp";
+            return SIGN_UP_VIEW;
         }
 
         if (!userDto.passwordsMatch()) {
             log.error("Le password non corrispondono");
             result.rejectValue("confirmPassword", "error.userDto", "Le password non corrispondono");
-            return "signUp";
+            return SIGN_UP_VIEW;
         }
 
         try {
@@ -55,7 +58,7 @@ public class UserWebController {
         } catch (Exception e) {
             log.error("Errore durante la registrazione: ", e);
             model.addAttribute("errorMessage", "Errore: " + e.getMessage());
-            return "signUp";
+            return SIGN_UP_VIEW;
         }
     }
 
@@ -75,7 +78,7 @@ public class UserWebController {
     @GetMapping("/list")
     public String listUsers(Model model, Principal principal) {
         UserRegistered currentUser = userService.findByUsername(principal.getName());
-        log.info("User found {}",currentUser.getUsername());
+        log.info("User found {}", currentUser.getUsername());
 
         if ("ADMIN".equals(currentUser.getRole().name())) {
             model.addAttribute("users", userService.getAllUsers());
@@ -88,9 +91,9 @@ public class UserWebController {
 
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
-        log.info("Delete user by id {}",id);
+        log.info("Delete user by id {}", id);
         userService.deleteUser(id);
-        return  "redirect:/user/list";
+        return "redirect:/user/list";
     }
 
     @GetMapping("/details")
@@ -111,7 +114,6 @@ public class UserWebController {
 
         return "user";
     }
-
 
 
 }

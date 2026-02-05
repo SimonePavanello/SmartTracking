@@ -1,7 +1,6 @@
 package it.univr.track.repository;
 
 import it.univr.track.entity.UserRegistered;
-import it.univr.track.entity.enumeration.Role;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class TelemetryIntegrationTest {
+ class TelemetryIntegrationTest {
 
     @Autowired
     private DeviceService deviceService;
@@ -94,15 +94,29 @@ public class TelemetryIntegrationTest {
     @Test
     @DisplayName("UC7 - Verifica Storico Spedizione")
     void testReadShipmentHistory() {
-        String shipmentId = "SH-001";
+        TrackingDataDTO data = new TrackingDataDTO();
+        data.setTemperature(18.5);
+        data.setHumidity(50.0);
+        data.setLatitude(45.0);
+        data.setLongitude(10.0);
 
         given()
-                .pathParam("shipmentId", shipmentId)
+                .header("X-API-KEY", testApiKey) // Usa la chiave generata nel setup [cite: 265]
+                .contentType(ContentType.JSON)
+                .body(data)
+                .when()
+                .post("/data")
+                .then()
+                .statusCode(200);
+
+        given()
+                .pathParam("shipmentId", testShipmentId)
                 .when()
                 .get("/shipment/{shipmentId}")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .body("$", instanceOf(java.util.List.class));
+                .body("$", hasSize(1))
+                .body("[0].temperature", is(18.5f));
     }
 }
