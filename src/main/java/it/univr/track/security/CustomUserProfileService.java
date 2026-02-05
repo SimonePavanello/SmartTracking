@@ -3,11 +3,11 @@ package it.univr.track.security;
 import it.univr.track.dto.UserDTO;
 import it.univr.track.entity.UserRegistered;
 import it.univr.track.entity.enumeration.Role;
+import it.univr.track.exception.UsernameAlreadyExistsException;
 import it.univr.track.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,7 +35,7 @@ public class CustomUserProfileService implements UserDetailsService {
 
     public void registerNewUser(UserDTO userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
-            throw new RuntimeException("Username già occupato");
+            throw new UsernameAlreadyExistsException("Username already exists");
         }
 
         UserRegistered newUser = new UserRegistered();
@@ -46,7 +46,7 @@ public class CustomUserProfileService implements UserDetailsService {
         newUser.setRole(Role.valueOf(userDto.getRole()));
 
         userRepository.save(newUser);
-        log.info("Nuovo utente registrato con successo: {}", newUser.getUsername());
+        log.info("New user registered: {}", newUser.getUsername());
     }
 
     public UserRegistered findByUsername(String username) {
