@@ -37,19 +37,14 @@ class SmartTrackingE2ETest {
     void testUserRegistration() {
         SignUpPage signUpPage = new SignUpPage(driver);
 
-        // Generiamo uno username unico per evitare conflitti nel database H2
         String uniqueUser = "user_" + System.currentTimeMillis();
 
-        // Esecuzione registrazione
         signUpPage.register(uniqueUser, "password123", "USER");
 
-        // Verifica la presenza del messaggio di successo nel template
         assertTrue(driver.getCurrentUrl().contains("success"));
 
-        // Test di login con le nuove credenziali per confermare la persistenza
         provisionPage.login(uniqueUser, "password123");
 
-        // Verifica l'accesso al profilo
         assertTrue(driver.getPageSource().contains(uniqueUser));
     }
 
@@ -84,18 +79,14 @@ class SmartTrackingE2ETest {
 
 
         driver.get("http://localhost:8080/web/shipments");
-        // Clicca sull'icona link per l'allocazione
         driver.findElement(By.cssSelector("a[title='Associa Sensore']")).click();
 
-        // Seleziona il primo device disponibile nel dropdown
         driver.findElement(By.name("deviceUid")).click();
         driver.findElement(By.xpath("//option[contains(text(), 'SN-2027-TEST')]")).click();
 
         driver.findElement(By.xpath("//button[contains(., 'CONFERMA ALLOCAZIONE')]")).click();
 
-        // Verifica che il contatore device sia aggiornato
         assertTrue(driver.getPageSource().contains("SH-TEST-003"));
-        // Verifica lo stato IN USO (ACTIVE) nella tabella devices
         driver.get("http://localhost:8080/web/devices");
         assertTrue(driver.getPageSource().contains("IN USO"));
     }
@@ -111,28 +102,22 @@ class SmartTrackingE2ETest {
 
 
         driver.get("http://localhost:8080/web/shipments");
-        // Clicca sull'icona link per l'allocazione
         driver.findElement(By.cssSelector("a[title='Associa Sensore']")).click();
 
-        // Seleziona il primo device disponibile nel dropdown
         driver.findElement(By.name("deviceUid")).click();
         driver.findElement(By.xpath("//option[contains(text(), 'DEV-MAP')]")).click();
 
         driver.findElement(By.xpath("//button[contains(., 'CONFERMA ALLOCAZIONE')]")).click();
 
-        // Verifica che il contatore device sia aggiornato
         assertTrue(driver.getPageSource().contains("MAP-TEST"));
-        // Verifica lo stato IN USO (ACTIVE) nella tabella devices
         driver.get("http://localhost:8080/web/devices");
         assertTrue(driver.getPageSource().contains("IN USO"));
 
         mapPage.navigateToMap();
 
-        // Verifica che la spedizione appaia nella lista a sinistra
         assertTrue(mapPage.isShipmentInSidebar("MAP-TEST"),
                 "La spedizione " + "MAP-TEST" + " dovrebbe essere visibile nella sidebar della mappa.");
 
-        // 3. Click sulla spedizione per attivare il focus della mappa
         driver.findElement(By.cssSelector("div[data-id='" + "MAP-TEST" + "']")).click();
 
         assertTrue(driver.findElement(By.id("map")).isDisplayed());
@@ -146,7 +131,6 @@ class SmartTrackingE2ETest {
 
         DeviceListPage deviceListPage = new DeviceListPage(driver);
 
-        // 1. Setup: Registriamo un device univoco da dismettere
         String devToKill = "DEV-TO-KILL-" + System.currentTimeMillis();
         provisionPage.registerDevice(devToKill);
 
@@ -165,7 +149,6 @@ class SmartTrackingE2ETest {
         shipmentPage.createShipment("SH-TEST-005", "Verona", "Beni sensibili test");
         shipmentPage.completeShipment("SH-TEST-005");
 
-        // Verifica che lo stato sia diventato ARCHIVIATA
         assertTrue(driver.getPageSource().contains("ARCHIVIATA"));
     }
 

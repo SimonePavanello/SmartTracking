@@ -17,10 +17,8 @@ public class MapPage extends BasePage{
     }
 
     public boolean isShipmentInSidebar(String shipmentId) {
-        // Aspetta che gli elementi della sidebar siano caricati
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("aside div.space-y-3")));
 
-        // Cerca l'elemento specifico tramite l'attributo data-id
         List<WebElement> shipments = driver.findElements(By.cssSelector("div[data-id='" + shipmentId + "']"));
         return !shipments.isEmpty();
     }

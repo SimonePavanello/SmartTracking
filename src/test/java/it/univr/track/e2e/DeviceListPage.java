@@ -12,13 +12,10 @@ public class DeviceListPage extends BasePage{
     public String decommissionDevice(String uuid) {
         driver.get("http://localhost:8080/web/devices");
 
-        // XPath dinamico per trovare il tasto "Dismetti" (icona trash) nella riga del device specifico
         String xpath = String.format("//tr[contains(., '%s')]//button[@title='Dismetti']", uuid);
 
-        // Aspetta che il tasto sia cliccabile e clicca
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath))).click();
 
-        // Gestione del popup di conferma nativo del browser (confirm JS)
         wait.until(ExpectedConditions.alertIsPresent());
         driver.switchTo().alert().accept();
 
