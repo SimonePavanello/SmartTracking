@@ -36,14 +36,14 @@ public class DeviceWebController {
 
     @PostMapping("/web/provision")
     public String doProvision(@RequestParam String uid) {
-        log.info("Provisioning di un nuovo dispositivo con UID: {}", uid);
+        log.info("Provisioning new device with UID: {}", uid);
         deviceService.registerNewDevice(uid);
         return "redirect:/web/devices";
     }
 
     @PostMapping("/web/decommission/{uuid}")
     public String decommission(@PathVariable String uuid) {
-        log.info("Decommissioning di un dispositivo con uuid: {}", uuid);
+        log.info("Decommissioning device with uuid: {}", uuid);
         deviceService.decommissionDevice(uuid);
         return "redirect:/web/devices";
     }

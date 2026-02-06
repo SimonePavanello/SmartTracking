@@ -33,7 +33,7 @@ class ShipmentServiceTest {
     private ShipmentService shipmentService;
 
     @Test
-    @DisplayName("Creazione spedizione - Deve impostare lo stato active a true")
+    @DisplayName("Create Shipment - Should Set Active Status to True")
     void testCreateShipment() {
         Shipment shipment = new Shipment();
         shipment.setShipmentId("SH-001");
@@ -47,7 +47,7 @@ class ShipmentServiceTest {
     }
 
     @Test
-    @DisplayName("UC4 - Associazione Device - Successo")
+    @DisplayName("UC4 - Device Association - Success")
     void testAssociateDeviceSuccess() {
         Long shipmentId = 1L;
         String deviceUid = "SN-TEST";
@@ -70,7 +70,7 @@ class ShipmentServiceTest {
     }
 
     @Test
-    @DisplayName("UC4 - Associazione Device - Fallisce se spedizione non attiva")
+    @DisplayName("UC4 - Device Association - Fails if Shipment Not Active")
     void testAssociateDeviceFailInactiveShipment() {
         Long shipmentId = 1L;
         Shipment shipment = new Shipment();
@@ -83,7 +83,7 @@ class ShipmentServiceTest {
     }
 
     @Test
-    @DisplayName("UC9 - Chiusura Spedizione - Deve liberare i sensori")
+    @DisplayName("UC9 - Close Shipment - Should Free Sensors")
     void testCloseShipment() {
         String shipmentId = "SH-100";
         Shipment shipment = new Shipment();

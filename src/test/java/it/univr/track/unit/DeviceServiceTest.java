@@ -31,7 +31,7 @@ class DeviceServiceTest {
     private String testUuid = "SN-2026-TEST";
 
     @Test
-    @DisplayName("Registrazione nuovo device - Successo")
+    @DisplayName("Register New Device - Success")
     void testRegisterNewDeviceSuccess() {
         when(deviceRepository.existsDeviceByUuid(testUuid)).thenReturn(false);
         when(deviceRepository.save(any(Device.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -47,7 +47,7 @@ class DeviceServiceTest {
     }
 
     @Test
-    @DisplayName("Registrazione nuovo device - Errore se già esistente")
+    @DisplayName("Register New Device - Error if Already Exists")
     void testRegisterNewDeviceFail() {
         when(deviceRepository.existsDeviceByUuid(testUuid)).thenReturn(true);
 
@@ -71,7 +71,7 @@ class DeviceServiceTest {
     }
 
     @Test
-    @DisplayName("UC8 - Decommissioning Fallito (Device non trovato)")
+    @DisplayName("UC8 - Decommissioning Failed (Device Not Found)")
     void testDecommissionDeviceFailed() {
         String invalidUuid = "NON-EXISTENT-ID";
         when(deviceRepository.findDeviceByUuid(invalidUuid)).thenReturn(Optional.empty());
@@ -86,7 +86,7 @@ class DeviceServiceTest {
     }
 
     @Test
-    @DisplayName("Update configurazione - Successo")
+    @DisplayName("Update Configuration - Success")
     void testUpdateConfiguration() {
         Device device = new Device();
         device.setUuid(testUuid);
@@ -105,7 +105,7 @@ class DeviceServiceTest {
     }
 
     @Test
-    @DisplayName("Push configurazione - Device non trovato")
+    @DisplayName("Push Configuration - Device Not Found")
     void testPushConfigFail() {
         when(deviceRepository.findDeviceByUuid(testUuid)).thenReturn(Optional.empty());
         NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {

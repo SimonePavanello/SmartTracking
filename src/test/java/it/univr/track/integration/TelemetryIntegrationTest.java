@@ -60,7 +60,7 @@ import static org.hamcrest.Matchers.*;
     }
 
     @Test
-    @DisplayName("UC5 - Invio Telemetria con API Key Valida")
+    @DisplayName("UC5 - Send Telemetry with Valid API Key")
     void testSendDataSuccess() {
         TrackingDataDTO data = new TrackingDataDTO();
         data.setTemperature(22.5);
@@ -79,7 +79,7 @@ import static org.hamcrest.Matchers.*;
     }
 
     @Test
-    @DisplayName("UC5 - Blocco Invio con API Key Errata")
+    @DisplayName("UC5 - Block Sending with Invalid API Key")
     void testSendDataUnauthorized() {
         given()
                 .header("X-API-KEY", "CHIAVE_FALSA")
@@ -92,7 +92,7 @@ import static org.hamcrest.Matchers.*;
     }
 
     @Test
-    @DisplayName("UC7 - Verifica Storico Spedizione")
+    @DisplayName("UC7 - Verify Shipment History")
     void testReadShipmentHistory() {
         TrackingDataDTO data = new TrackingDataDTO();
         data.setTemperature(18.5);

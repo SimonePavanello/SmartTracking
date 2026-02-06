@@ -37,7 +37,7 @@ class DeviceControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("UC1 - Registrazione device (Solo Admin)")
+    @DisplayName("UC1 - Device Registration (Admin Only)")
     @WithMockUser(roles = "ADMIN")
     void testAddDeviceAdmin() throws Exception {
         Device device = new Device();
@@ -53,7 +53,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("UC1 - Blocco registrazione device per utenti non Admin")
+    @DisplayName("UC1 - Block Device Registration for Non-Admin Users")
     @WithMockUser(roles = "USER")
     void testAddDeviceUserDenied() throws Exception {
         mockMvc.perform(post("/api/device")
@@ -63,7 +63,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("Lettura Configurazione - Successo con API Key")
+    @DisplayName("Read Configuration - Success with API Key")
     @WithMockUser
     void testReadDeviceConfigSuccess() throws Exception {
         Device device = new Device();
@@ -79,7 +79,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("Lettura Configurazione - API Key non valida")
+    @DisplayName("Read Configuration - Invalid API Key")
     @WithMockUser
     void testReadDeviceConfigUnauthorized() throws Exception {
         Device device = new Device();
@@ -95,7 +95,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("UC2 - Modifica configurazione dispositivo (API)")
+    @DisplayName("UC2 - Update Device Configuration (API)")
     @WithMockUser
     void testEditDevice() throws Exception {
         DeviceConfigDTO configDto = new DeviceConfigDTO();
@@ -112,7 +112,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("UC8 - Dismissione dispositivo (API - Solo Admin)")
+    @DisplayName("UC8 - Device Decommissioning (API - Admin Only)")
     @WithMockUser(roles = "ADMIN")
     void testDecommissionDeviceApi() throws Exception {
         mockMvc.perform(delete("/api/device/SN-123"))
@@ -122,7 +122,7 @@ class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("Lista Dispositivi (API)")
+    @DisplayName("Device List (API)")
     @WithMockUser
     void testGetDevicesListApi() throws Exception {
         Device d1 = new Device();

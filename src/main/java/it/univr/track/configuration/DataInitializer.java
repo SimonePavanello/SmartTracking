@@ -18,18 +18,17 @@ public class DataInitializer {
             String adminUsername = "admin";
 
             if (userRepository.findByUsername(adminUsername).isEmpty()) {
-                log.info("Inizializzazione database: creazione account admin predefinito...");
-
+                log.info("Database initialization: creating default admin account...");
                 UserDTO adminDto = new UserDTO();
                 adminDto.setUsername(adminUsername);
-                adminDto.setPassword("123456789"); // Cambiala al primo accesso!
+                adminDto.setPassword("123456789");
                 adminDto.setConfirmPassword("123456789");
-                adminDto.setRole("ADMIN"); //
+                adminDto.setRole("ADMIN");
 
                 userService.registerNewUser(adminDto);
-                log.info("Account Admin creato con successo. Username: admin, Password: 123456789");
+                log.info("Admin account created successfully. Username: admin, Password: 123456789");
             } else {
-                log.info("Account admin già presente, salto inizializzazione.");
+                log.info("Admin account already exists, skipping initialization.");
             }
         };
     }

@@ -33,7 +33,7 @@ class SmartTrackingE2ETest {
     }
 
     @Test
-    @DisplayName("UC1 - Registrazione nuovo utente")
+    @DisplayName("UC1 - Register New User")
     void testUserRegistration() {
         SignUpPage signUpPage = new SignUpPage(driver);
 
@@ -49,7 +49,7 @@ class SmartTrackingE2ETest {
     }
 
     @Test
-    @DisplayName("UC1 - Provisioning di un nuovo dispositivo")
+    @DisplayName("UC1 - Provisioning New Device")
     void testProvisioning() {
         provisionPage.login("admin", "123456789");
         provisionPage.registerDevice("SN-2026-TEST");
@@ -60,7 +60,7 @@ class SmartTrackingE2ETest {
     }
 
     @Test
-    @DisplayName("UC3 - Creazione Nuova Spedizione")
+    @DisplayName("UC3 - Create New Shipment")
     void testCreateShipment() {
         provisionPage.login("admin", "123456789");
 
@@ -71,7 +71,7 @@ class SmartTrackingE2ETest {
     }
 
     @Test
-    @DisplayName("UC4 - Associazione Device a Spedizione")
+    @DisplayName("UC4 - Associate Device to Shipment")
     void testAssociateDevice() {
         provisionPage.login("admin", "123456789");
         provisionPage.registerDevice("SN-2027-TEST");
@@ -92,7 +92,7 @@ class SmartTrackingE2ETest {
     }
 
     @Test
-    @DisplayName("UC6 - Verifica visibilità spedizione su mappa dopo associazione")
+    @DisplayName("UC6 - Verify Shipment Visibility on Map After Association")
     void testShipmentVisibilityOnMap() {
         MapPage mapPage = new MapPage(driver);
 
@@ -125,7 +125,7 @@ class SmartTrackingE2ETest {
 
 
     @Test
-    @DisplayName("UC8 - Decommissioning di un dispositivo")
+    @DisplayName("UC8 - Device Decommissioning")
     void testDecommissionDevice() {
         provisionPage.login("admin", "123456789");
 
@@ -142,7 +142,7 @@ class SmartTrackingE2ETest {
     }
 
     @Test
-    @DisplayName("UC9 - Completamento Spedizione")
+    @DisplayName("UC9 - Complete Shipment")
     void testCompleteShipment() {
         provisionPage.login("admin", "123456789");
         provisionPage.registerDevice("SN-2028-TEST");
