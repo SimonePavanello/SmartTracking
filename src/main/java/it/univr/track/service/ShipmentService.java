@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -30,6 +31,9 @@ public class ShipmentService {
     }
 
     public Shipment createShipment(Shipment shipment) {
+        Optional<Shipment> res = shipmentRepository.findShipmentByShipmentId(shipment.getShipmentId());
+        if(res.isPresent()) throw new IllegalArgumentException("Shipment already exists");
+
         shipment.setActive(true);
         return shipmentRepository.save(shipment);
     }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,6 +45,7 @@ public class DeviceService {
         return deviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Device not found"));
     }
+
     public Optional<Device> findByApiKey(String apiKey) {
         return deviceRepository.findDeviceByApiKey(apiKey);
     }
@@ -51,19 +53,19 @@ public class DeviceService {
 
     public Optional<Device> getByUid(String uuid) {
         log.info("Device with UUID: {}", uuid);
-        return deviceRepository.findDeviceByUuid(uuid);
+        Optional<Device> device = deviceRepository.findDeviceByUuid(uuid);
+        if (device.isEmpty()) {
+            throw new NoSuchElementException("Device not found with UUID: ".concat(uuid));
+        }
+        return device;
     }
 
     @Transactional
     public void decommissionDevice(String uuid) {
         Optional<Device> device = getByUid(uuid);
-        if (device.isEmpty()) {
-            throw new RuntimeException("Device not found");
-        }else {
-            device.get().setShipment(null);
-            device.get().setStatus(DeviceStatus.DECOMMISSIONED);
-            deviceRepository.save(device.get());
-        }
+        device.get().setShipment(null);
+        device.get().setStatus(DeviceStatus.DECOMMISSIONED);
+        deviceRepository.save(device.get());
 
 
     }
@@ -78,10 +80,6 @@ public class DeviceService {
 
     public boolean pushConfigToHardware(String uuid) {
         Optional<Device> device = getByUid(uuid);
-        if (device.isEmpty()){
-            return false;
-        }
-        // Qui andrebbe la logica di integrazione IoT (es. MQTT o HTTP call)
         log.info("Sending configuration to device {}", device.get().getUuid());
         return true;
     }

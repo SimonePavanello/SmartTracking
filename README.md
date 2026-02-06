@@ -371,14 +371,11 @@ gradle build
 [INFO] Total time: 45.231 s
 ```
 
-#### 4.2.4 Eseguire l'Applicazione
-```bash
-mvn spring-boot:run
-```
+
 
 **Server avviato su**: `http://localhost:8080`
 
-### 4.3 Verifica Installazione
+### 4.4 Verifica Installazione
 
 #### Test : Accesso Interfaccia Web
 1. Aprire browser su `http://localhost:8080`
@@ -389,21 +386,21 @@ mvn spring-boot:run
 
 
 
-### 4.4 Configurazioni Avanzate
+### 4.5 Configurazioni Avanzate
 
-#### 4.4.1 Modificare Porta Server
+#### 4.5.1 Modificare Porta Server
 Editare `application.properties`:
 ```properties
 server.port=9090
 ```
 
-#### 4.4.2 Abilitare SQL Logging
+#### 4.5.2 Abilitare SQL Logging
 ```properties
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 ```
 
-#### 4.4.3 Configurare Intervallo Polling Mappa
+#### 4.5.3 Configurare Intervallo Polling Mappa
 Modificare `map.html` (linea ~120):
 ```javascript
 const POLLING_INTERVAL_MS = 5000; // da 10000 a 5000 per refresh ogni 5s
@@ -916,7 +913,6 @@ curl http://localhost:8080/api/tracking/shipment/SH-2026-DEMO
 - Solo i dati relativi a spedizioni attive possono essere visualizzati
 - Il sistema deve mostrare sempre l'ultimo punto GPS disponibile
 - Il polling non deve bloccare l'interazione utente (asincrono)
-- Le anomalie di temperatura devono essere immediatamente visibili
 
 ---
 

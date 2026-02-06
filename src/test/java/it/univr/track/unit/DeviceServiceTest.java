@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,11 +76,11 @@ class DeviceServiceTest {
         String invalidUuid = "NON-EXISTENT-ID";
         when(deviceRepository.findDeviceByUuid(invalidUuid)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
             deviceService.decommissionDevice(invalidUuid);
         });
 
-        assertEquals("Device not found", exception.getMessage());
+        assertEquals("Device not found with UUID: NON-EXISTENT-ID", exception.getMessage());
 
         verify(deviceRepository, never()).save(any(Device.class));
     }
@@ -107,9 +108,8 @@ class DeviceServiceTest {
     @DisplayName("Push configurazione - Device non trovato")
     void testPushConfigFail() {
         when(deviceRepository.findDeviceByUuid(testUuid)).thenReturn(Optional.empty());
-
-        boolean result = deviceService.pushConfigToHardware(testUuid);
-
-        assertFalse(result);
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
+            deviceService.pushConfigToHardware(testUuid);
+        });
     }
 }
